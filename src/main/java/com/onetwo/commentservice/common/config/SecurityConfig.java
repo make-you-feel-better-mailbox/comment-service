@@ -43,12 +43,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, MvcRequestMatcher.Builder mvc) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                // enable h2-console
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 세션을 사용하지 않기 때문에 STATELESS로 설정
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -56,11 +55,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()// h2-console, favicon.ico 요청 인증 무시
+                                .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .requestMatchers(this.createMvcRequestMatcherForWhitelist(mvc)).permitAll()
-                                .anyRequest().authenticated() // 그 외 인증 없이 접근X
+                                .anyRequest().authenticated()
                 )
-                .apply(filterConfigure); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
+                .apply(filterConfigure);
 
         return httpSecurity.build();
     }
@@ -68,7 +67,7 @@ public class SecurityConfig {
     private MvcRequestMatcher[] createMvcRequestMatcherForWhitelist(MvcRequestMatcher.Builder mvc) {
         List<MvcRequestMatcher> mvcRequestMatcherList = Stream.of(WHITE_LIST).map(mvc::pattern).collect(Collectors.toList());
 
-        mvcRequestMatcherList.add(mvc.pattern(HttpMethod.GET, GlobalUrl.POSTING_FILTER));
+        mvcRequestMatcherList.add(mvc.pattern(HttpMethod.GET, GlobalUrl.COMMENT_ROOT + GlobalUrl.UNDER_ROUTE));
 
         return mvcRequestMatcherList.toArray(MvcRequestMatcher[]::new);
     }
