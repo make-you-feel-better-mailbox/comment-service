@@ -4,17 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.mapper.CommentDtoMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
+import com.onetwo.commentservice.adapter.in.web.comment.response.CommentDetailResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.DeleteCommentResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.RegisterCommentResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.UpdateCommentResponse;
 import com.onetwo.commentservice.adapter.in.web.config.TestConfig;
 import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
+import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
+import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
+import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.common.GlobalUrl;
@@ -31,6 +35,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.time.Instant;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -63,12 +69,16 @@ class CommentControllerTest {
     private UpdateCommentUseCase updateCommentUseCase;
 
     @MockBean
+    private ReadCommentUseCase readCommentUseCase;
+
+    @MockBean
     private CommentDtoMapper commentDtoMapper;
 
     private final Long postingId = 1L;
     private final Long commentId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
+    private final Instant createdDate = Instant.now();
 
     @Test
     @WithMockUser(username = userId)
@@ -134,6 +144,27 @@ class CommentControllerTest {
                 put(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCommentRequest))
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("[단위][Web Adapter] Comment 상세 조회 - 성공 테스트")
+    void findCommentDetailSuccessTest() throws Exception {
+        //given
+        FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, postingId, userId, content, createdDate);
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, postingId, userId, content, createdDate);
+
+        when(commentDtoMapper.findRequestToCommand(anyLong())).thenReturn(findCommentDetailCommand);
+        when(readCommentUseCase.findCommentsDetail(any(FindCommentDetailCommand.class))).thenReturn(commentDetailResponseDto);
+        when(commentDtoMapper.dtoToDetailResponse(any(CommentDetailResponseDto.class))).thenReturn(commentDetailResponse);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isOk())

@@ -1,12 +1,15 @@
 package com.onetwo.commentservice.application.service.service;
 
 import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
+import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
+import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
+import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
@@ -24,7 +27,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService implements RegisterCommentUseCase, DeleteCommentUseCase, UpdateCommentUseCase {
+public class CommentService implements RegisterCommentUseCase, DeleteCommentUseCase, UpdateCommentUseCase, ReadCommentUseCase {
 
     private final RegisterCommentPort registerCommentPort;
     private final ReadCommentPort readCommentPort;
@@ -90,6 +93,21 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
         updateCommentPort.updateComment(comment);
 
         return commentUseCaseConverter.commentToUpdateResponseDto(true);
+    }
+
+    /**
+     * Get Detail about comment use case,
+     * Get detail data about comment if exist
+     *
+     * @param findCommentDetailCommand Request comment id
+     * @return Detail data about comment
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public CommentDetailResponseDto findCommentsDetail(FindCommentDetailCommand findCommentDetailCommand) {
+        Comment comment = checkCommentExistAndGetComment(findCommentDetailCommand.getCommentId());
+
+        return commentUseCaseConverter.commentToDetailResponseDto(comment);
     }
 
     private Comment checkCommentExistAndGetComment(Long commentId) {

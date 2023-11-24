@@ -3,16 +3,20 @@ package com.onetwo.commentservice.adapter.in.web.comment.api;
 import com.onetwo.commentservice.adapter.in.web.comment.mapper.CommentDtoMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
+import com.onetwo.commentservice.adapter.in.web.comment.response.CommentDetailResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.DeleteCommentResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.RegisterCommentResponse;
 import com.onetwo.commentservice.adapter.in.web.comment.response.UpdateCommentResponse;
 import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
+import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
+import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
+import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.common.GlobalUrl;
@@ -30,7 +34,7 @@ public class CommentController {
     private final RegisterCommentUseCase registerCommentUseCase;
     private final DeleteCommentUseCase deleteCommentUseCase;
     private final UpdateCommentUseCase updateCommentUseCase;
-
+    private final ReadCommentUseCase readCommentUseCase;
     private final CommentDtoMapper commentDtoMapper;
 
     /**
@@ -78,5 +82,18 @@ public class CommentController {
         UpdateCommentCommand updateCommentCommand = commentDtoMapper.updateRequestCommand(commentId, userId, updateCommentRequest);
         UpdateCommentResponseDto updateCommentResponseDto = updateCommentUseCase.updateComment(updateCommentCommand);
         return ResponseEntity.ok().body(commentDtoMapper.dtoToUpdateResponse(updateCommentResponseDto));
+    }
+
+    /**
+     * Get Detail about comment inbound adapter
+     *
+     * @param commentId Request comment id
+     * @return Detail data about comment
+     */
+    @GetMapping(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE)
+    public ResponseEntity<CommentDetailResponse> findCommentsDetail(@PathVariable(GlobalUrl.PATH_VARIABLE_COMMENT_ID) Long commentId) {
+        FindCommentDetailCommand findCommentDetailCommand = commentDtoMapper.findRequestToCommand(commentId);
+        CommentDetailResponseDto commentDetailResponseDto = readCommentUseCase.findCommentsDetail(findCommentDetailCommand);
+        return ResponseEntity.ok().body(commentDtoMapper.dtoToDetailResponse(commentDetailResponseDto));
     }
 }

@@ -30,9 +30,9 @@ class DeleteCommentCommandValidationTest {
 
     @ParameterizedTest
     @NullSource
-    @DisplayName("[단위][Command Validation] Delete Comment Command posting Id Validation fail test - 실패 테스트")
-    void deleteCommentCommandPostingIdValidationFailTest(Long commentId) {
+    @DisplayName("[단위][Command Validation] Delete Comment Command comment Id Validation fail test - 실패 테스트")
+    void deleteCommentCommandPostingIdValidationFailTest(Long testCommentId) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new DeleteCommentCommand(commentId, userId));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new DeleteCommentCommand(testCommentId, userId));
     }
 }

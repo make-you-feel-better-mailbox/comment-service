@@ -1,5 +1,6 @@
 package com.onetwo.commentservice.application.service.converter;
 
+import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
@@ -23,5 +24,16 @@ public class CommentUseCaseConverterImpl implements CommentUseCaseConverter {
     @Override
     public UpdateCommentResponseDto commentToUpdateResponseDto(boolean isUpdateSuccess) {
         return new UpdateCommentResponseDto(isUpdateSuccess);
+    }
+
+    @Override
+    public CommentDetailResponseDto commentToDetailResponseDto(Comment comment) {
+        return new CommentDetailResponseDto(
+                comment.getId(),
+                comment.getPostingId(),
+                comment.getUserId(),
+                comment.getContent(),
+                comment.getCreatedAt()
+        );
     }
 }

@@ -6,6 +6,7 @@ import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentR
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.config.TestConfig;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
+import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.common.GlobalUrl;
@@ -53,6 +54,9 @@ class CommentControllerValidationTest {
 
     @MockBean
     private UpdateCommentUseCase updateCommentUseCase;
+
+    @MockBean
+    private ReadCommentUseCase readCommentUseCase;
 
     @MockBean
     private CommentDtoMapper commentDtoMapper;
@@ -119,8 +123,8 @@ class CommentControllerValidationTest {
 
     @Test
     @WithMockUser(username = userId)
-    @DisplayName("[단위][Web Adapter] Comment 수정 posting id validation fail - 실패 테스트")
-    void updateCommentContentValidationFailTest() throws Exception {
+    @DisplayName("[단위][Web Adapter] Comment 수정 comment id validation fail - 실패 테스트")
+    void updateCommentContentCommentIdValidationFailTest() throws Exception {
         //given
         String commentId = "badCommentId";
 
@@ -150,6 +154,22 @@ class CommentControllerValidationTest {
                 put(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCommentRequest))
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("[단위][Web Adapter] Comment 상세 조회 comment id validation fail - 실패 테스트")
+    void findCommentDetailsContentCommentIdValidationFailTest() throws Exception {
+        //given
+        String commentId = "badCommentId";
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
         //then
         resultActions.andExpect(status().isBadRequest())

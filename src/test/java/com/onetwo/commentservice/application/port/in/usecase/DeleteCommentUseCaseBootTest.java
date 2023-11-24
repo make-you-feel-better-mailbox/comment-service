@@ -33,12 +33,12 @@ class DeleteCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 삭제 - 성공 테스트")
     void deleteCommentUseCaseSuccessTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
-
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
-        registerCommentPort.registerComment(comment);
+        Comment savedComment = registerCommentPort.registerComment(comment);
+
+        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(savedComment.getId(), userId);
 
         //when
         DeleteCommentResponseDto result = deleteCommentUseCase.deleteComment(deleteCommentCommand);

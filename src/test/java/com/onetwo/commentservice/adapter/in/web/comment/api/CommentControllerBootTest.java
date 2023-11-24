@@ -164,4 +164,43 @@ class CommentControllerBootTest {
                         )
                 );
     }
+
+    @Test
+    @Transactional
+    @DisplayName("[통합][Web Adapter] Comment 상세 조회 - 성공 테스트")
+    void findCommentDetailsSuccessTest() throws Exception {
+        //given
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentResponseDto registerCommentResponseDto = registerCommentUseCase.registerComment(registerCommentCommand);
+
+        Long commentId = registerCommentResponseDto.commentId();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .headers(testHeader.getRequestHeaderWithMockAccessKey(userId))
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("find-comments-detail",
+                                requestHeaders(
+                                        headerWithName(GlobalStatus.ACCESS_ID).description("서버 Access id"),
+                                        headerWithName(GlobalStatus.ACCESS_KEY).description("서버 Access key"),
+                                        headerWithName(GlobalStatus.ACCESS_TOKEN).description("유저의 access-token")
+                                ),
+                                pathParameters(
+                                        parameterWithName(GlobalUrl.PATH_VARIABLE_COMMENT_ID).description("조회할 comment id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("comment id"),
+                                        fieldWithPath("postingId").type(JsonFieldType.NUMBER).description("comment가 달린 Posting id"),
+                                        fieldWithPath("userId").type(JsonFieldType.STRING).description("작성자 user id"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("comment 본문"),
+                                        fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성 날짜 및 시간")
+                                )
+                        )
+                );
+    }
 }
