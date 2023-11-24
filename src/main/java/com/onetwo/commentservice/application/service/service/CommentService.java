@@ -2,10 +2,13 @@ package com.onetwo.commentservice.application.service.service;
 
 import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
+import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
+import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
@@ -21,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService implements RegisterCommentUseCase, DeleteCommentUseCase {
+public class CommentService implements RegisterCommentUseCase, DeleteCommentUseCase, UpdateCommentUseCase {
 
     private final RegisterCommentPort registerCommentPort;
     private final ReadCommentPort readCommentPort;
@@ -65,6 +68,28 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
         updateCommentPort.updateComment(comment);
 
         return commentUseCaseConverter.commentToDeleteResponseDto(comment);
+    }
+
+    /**
+     * Update comment use case,
+     * update comment data on persistence
+     *
+     * @param updateCommentCommand request update comment id and request user id and update data
+     * @return Boolean about update comment success
+     */
+    @Override
+    @Transactional
+    public UpdateCommentResponseDto updateComment(UpdateCommentCommand updateCommentCommand) {
+        Comment comment = checkCommentExistAndGetComment(updateCommentCommand.getCommentId());
+
+        if (!comment.isSameUserId(updateCommentCommand.getUserId()))
+            throw new BadRequestException("Register does not match with request user");
+
+        comment.updateComment(updateCommentCommand);
+
+        updateCommentPort.updateComment(comment);
+
+        return commentUseCaseConverter.commentToUpdateResponseDto(true);
     }
 
     private Comment checkCommentExistAndGetComment(Long commentId) {

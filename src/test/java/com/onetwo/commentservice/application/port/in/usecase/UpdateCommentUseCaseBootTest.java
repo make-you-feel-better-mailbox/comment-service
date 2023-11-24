@@ -1,8 +1,8 @@
 package com.onetwo.commentservice.application.port.in.usecase;
 
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
+import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.common.exceptions.BadRequestException;
 import com.onetwo.commentservice.common.exceptions.NotFoundResourceException;
@@ -16,51 +16,52 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class DeleteCommentUseCaseBootTest {
+class UpdateCommentUseCaseBootTest {
 
     @Autowired
-    private DeleteCommentUseCase deleteCommentUseCase;
+    private UpdateCommentUseCase updateCommentUseCase;
 
     @Autowired
     private RegisterCommentPort registerCommentPort;
 
-    private final Long commentId = 1L;
+    private final Long commentId = 0L;
     private final Long postingId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
+    private final String updateContent = "updateContent";
 
     @Test
-    @DisplayName("[통합][Use Case] Comment 삭제 - 성공 테스트")
-    void deleteCommentUseCaseSuccessTest() {
+    @DisplayName("[통합][Use Case] Comment 수정 - 성공 테스트")
+    void updateCommentUseCaseSuccessTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
-
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
-        registerCommentPort.registerComment(comment);
+        Comment savedComment = registerCommentPort.registerComment(comment);
+
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(savedComment.getId(), userId, updateContent);
 
         //when
-        DeleteCommentResponseDto result = deleteCommentUseCase.deleteComment(deleteCommentCommand);
+        UpdateCommentResponseDto result = updateCommentUseCase.updateComment(UpdateCommentCommand);
 
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isDeleteSuccess());
+        Assertions.assertTrue(result.isUpdateSuccess());
     }
 
     @Test
-    @DisplayName("[통합][Use Case] Comment 삭제 comment does not exist - 실패 테스트")
-    void deleteCommentUseCaseCommentDoesNotExistFailTest() {
+    @DisplayName("[통합][Use Case] Comment 수정 comment does not exist - 실패 테스트")
+    void updateCommentUseCaseCommentDoesNotExistFailTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, updateContent);
 
         //when then
-        Assertions.assertThrows(NotFoundResourceException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(NotFoundResourceException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 
     @Test
-    @DisplayName("[통합][Use Case] Comment 삭제 comment already deleted - 실패 테스트")
-    void deleteCommentUseCaseCommentAlreadyDeletedFailTest() {
+    @DisplayName("[통합][Use Case] Comment 수정 comment already Updated - 실패 테스트")
+    void updateCommentUseCaseCommentAlreadyUpdatedFailTest() {
         //given
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
@@ -69,15 +70,15 @@ class DeleteCommentUseCaseBootTest {
 
         Comment savedComment = registerCommentPort.registerComment(comment);
 
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(savedComment.getId(), userId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(savedComment.getId(), userId, updateContent);
 
         //when then
-        Assertions.assertThrows(BadRequestException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(BadRequestException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 삭제 user id does not match - 실패 테스트")
-    void deleteCommentUseCaseUserIdDoesNotMatchFailTest() {
+    @DisplayName("[단위][Use Case] Comment 수정 user id does not match - 실패 테스트")
+    void updateCommentUseCaseUserIdDoesNotMatchFailTest() {
         //given
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
@@ -86,9 +87,9 @@ class DeleteCommentUseCaseBootTest {
 
         String wrongUserId = "wrongUserId";
 
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(savedComment.getId(), wrongUserId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(savedComment.getId(), wrongUserId, updateContent);
 
         //when then
-        Assertions.assertThrows(BadRequestException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(BadRequestException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 }

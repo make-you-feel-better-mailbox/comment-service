@@ -1,8 +1,8 @@
 package com.onetwo.commentservice.application.port.in.usecase;
 
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
+import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
 import com.onetwo.commentservice.application.service.converter.CommentUseCaseConverter;
@@ -20,15 +20,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class DeleteCommentUseCaseTest {
+class UpdateCommentUseCaseTest {
 
     @InjectMocks
-    private CommentService deleteCommentUseCase;
+    private CommentService updateCommentUseCase;
 
     @Mock
     private ReadCommentPort readCommentPort;
@@ -45,42 +45,42 @@ class DeleteCommentUseCaseTest {
     private final String content = "content";
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 삭제 - 성공 테스트")
-    void deleteCommentUseCaseSuccessTest() {
+    @DisplayName("[단위][Use Case] Comment 수정 - 성공 테스트")
+    void updateCommentUseCaseSuccessTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
-        DeleteCommentResponseDto deleteCommentResponseDto = new DeleteCommentResponseDto(true);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, content);
+        UpdateCommentResponseDto UpdateCommentResponseDto = new UpdateCommentResponseDto(true);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
-        given(commentUseCaseConverter.commentToDeleteResponseDto(any(Comment.class))).willReturn(deleteCommentResponseDto);
+        given(commentUseCaseConverter.commentToUpdateResponseDto(anyBoolean())).willReturn(UpdateCommentResponseDto);
         //when
-        DeleteCommentResponseDto result = deleteCommentUseCase.deleteComment(deleteCommentCommand);
+        UpdateCommentResponseDto result = updateCommentUseCase.updateComment(UpdateCommentCommand);
 
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isDeleteSuccess());
+        Assertions.assertTrue(result.isUpdateSuccess());
     }
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 삭제 comment does not exist - 실패 테스트")
-    void deleteCommentUseCaseCommentDoesNotExistFailTest() {
+    @DisplayName("[단위][Use Case] Comment 수정 comment does not exist - 실패 테스트")
+    void updateCommentUseCaseCommentDoesNotExistFailTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, content);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.empty());
 
         //when then
-        Assertions.assertThrows(NotFoundResourceException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(NotFoundResourceException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 삭제 comment already deleted - 실패 테스트")
-    void deleteCommentUseCaseCommentAlreadyDeletedFailTest() {
+    @DisplayName("[단위][Use Case] Comment 수정 comment already Updated - 실패 테스트")
+    void updateCommentUseCaseCommentAlreadyUpdatedFailTest() {
         //given
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, userId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, content);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
@@ -90,16 +90,16 @@ class DeleteCommentUseCaseTest {
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
 
         //when then
-        Assertions.assertThrows(BadRequestException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(BadRequestException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 삭제 user id does not match - 실패 테스트")
-    void deleteCommentUseCaseUserIdDoesNotMatchFailTest() {
+    @DisplayName("[단위][Use Case] Comment 수정 user id does not match - 실패 테스트")
+    void updateCommentUseCaseUserIdDoesNotMatchFailTest() {
         //given
         String wrongUserId = "wrongUserId";
 
-        DeleteCommentCommand deleteCommentCommand = new DeleteCommentCommand(commentId, wrongUserId);
+        UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, wrongUserId, content);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
@@ -107,6 +107,6 @@ class DeleteCommentUseCaseTest {
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
 
         //when then
-        Assertions.assertThrows(BadRequestException.class, () -> deleteCommentUseCase.deleteComment(deleteCommentCommand));
+        Assertions.assertThrows(BadRequestException.class, () -> updateCommentUseCase.updateComment(UpdateCommentCommand));
     }
 }

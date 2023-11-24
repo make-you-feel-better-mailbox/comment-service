@@ -2,6 +2,7 @@ package com.onetwo.commentservice.domain;
 
 import com.onetwo.commentservice.adapter.out.persistence.entity.CommentEntity;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
+import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,5 +62,11 @@ public class Comment extends BaseDomain {
         this.state = true;
         setUpdatedAt(Instant.now());
         setUpdateUser(this.userId);
+    }
+
+    public void updateComment(UpdateCommentCommand updateCommentCommand) {
+        this.content = updateCommentCommand.getContent();
+        setUpdatedAt(Instant.now());
+        setUpdateUser(updateCommentCommand.getUserId());
     }
 }

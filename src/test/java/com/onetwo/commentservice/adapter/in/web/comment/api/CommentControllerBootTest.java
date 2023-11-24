@@ -2,6 +2,7 @@ package com.onetwo.commentservice.adapter.in.web.comment.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
+import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.config.TestHeader;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
@@ -24,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -119,6 +119,47 @@ class CommentControllerBootTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("isDeleteSuccess").type(JsonFieldType.BOOLEAN).description("삭제 성공 여부")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("[통합][Web Adapter] Comment 수정 - 성공 테스트")
+    void updateCommentSuccessTest() throws Exception {
+        //given
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest(content);
+
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentResponseDto registerCommentResponseDto = registerCommentUseCase.registerComment(registerCommentCommand);
+
+        Long commentId = registerCommentResponseDto.commentId();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                put(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateCommentRequest))
+                        .headers(testHeader.getRequestHeaderWithMockAccessKey(userId))
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("update-comment",
+                                requestHeaders(
+                                        headerWithName(GlobalStatus.ACCESS_ID).description("서버 Access id"),
+                                        headerWithName(GlobalStatus.ACCESS_KEY).description("서버 Access key"),
+                                        headerWithName(GlobalStatus.ACCESS_TOKEN).description("유저의 access-token")
+                                ),
+                                pathParameters(
+                                        parameterWithName(GlobalUrl.PATH_VARIABLE_COMMENT_ID).description("삭제할 comment id")
+                                ),
+                                requestFields(
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("수정할 comment 본문")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isUpdateSuccess").type(JsonFieldType.BOOLEAN).description("삭제 성공 여부")
                                 )
                         )
                 );
