@@ -60,3 +60,37 @@ include::{snippets}/register-comment/response-body.adoc[]
 http-response
 
 include::{snippets}/register-comment/http-response.adoc[]
+
+=== Delete Comment
+
+path-parameters
+
+include::{snippets}/delete-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/delete-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/delete-comment/request-headers.adoc[]
+
+request-body
+
+include::{snippets}/delete-comment/request-body.adoc[]
+
+curl-request
+
+include::{snippets}/delete-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/delete-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/delete-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/delete-comment/http-response.adoc[]

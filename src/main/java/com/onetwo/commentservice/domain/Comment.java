@@ -48,4 +48,18 @@ public class Comment extends BaseDomain {
         setCreatedAt(Instant.now());
         setCreateUser(this.userId);
     }
+
+    public boolean isDeleted() {
+        return this.state;
+    }
+
+    public boolean isSameUserId(String userId) {
+        return this.userId.equals(userId);
+    }
+
+    public void deleteComment() {
+        this.state = true;
+        setUpdatedAt(Instant.now());
+        setUpdateUser(this.userId);
+    }
 }
