@@ -132,3 +132,35 @@ include::{snippets}/update-comment/response-body.adoc[]
 http-response
 
 include::{snippets}/update-comment/http-response.adoc[]
+
+== 2. Get Filtered Comment
+
+=== Filtering Comment
+
+query-parameters
+
+include::{snippets}/filtering-comment/query-parameters.adoc[]
+
+http-request
+
+include::{snippets}/filtering-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/filtering-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/filtering-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/filtering-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/filtering-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/filtering-comment/http-response.adoc[]

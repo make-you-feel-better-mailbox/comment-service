@@ -1,13 +1,7 @@
 package com.onetwo.commentservice.application.service.service;
 
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
-import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.command.*;
+import com.onetwo.commentservice.application.port.in.response.*;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
@@ -20,9 +14,12 @@ import com.onetwo.commentservice.common.exceptions.BadRequestException;
 import com.onetwo.commentservice.common.exceptions.NotFoundResourceException;
 import com.onetwo.commentservice.domain.Comment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -120,5 +117,27 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
         if (comment.isDeleted()) throw new BadRequestException("Comment already deleted");
 
         return comment;
+    }
+
+    /**
+     * Get Filtered comment use case,
+     * Get Filtered slice comment data
+     *
+     * @param commentFilterCommand filter condition and pageable
+     * @return content and slice data
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<FilteredCommentResponseDto> filterComment(CommentFilterCommand commentFilterCommand) {
+        List<Comment> commentList = readCommentPort.filterComment(commentFilterCommand);
+
+        boolean hasNext = commentList.size() > commentFilterCommand.getPageable().getPageSize();
+
+        if (hasNext) commentList.remove(commentList.size() - 1);
+
+        List<FilteredCommentResponseDto> filteredCommentResponseDtoList = commentList.stream()
+                .map(commentUseCaseConverter::commentToFilteredResponse).toList();
+
+        return new SliceImpl<>(filteredCommentResponseDtoList, commentFilterCommand.getPageable(), hasNext);
     }
 }

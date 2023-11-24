@@ -2,6 +2,7 @@ package com.onetwo.commentservice.application.service.adapter;
 
 import com.onetwo.commentservice.adapter.out.persistence.entity.CommentEntity;
 import com.onetwo.commentservice.adapter.out.persistence.repository.comment.CommentRepository;
+import com.onetwo.commentservice.application.port.in.command.CommentFilterCommand;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
@@ -9,7 +10,9 @@ import com.onetwo.commentservice.domain.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +40,13 @@ public class CommentPersistenceAdapter implements RegisterCommentPort, ReadComme
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<Comment> filterComment(CommentFilterCommand commentFilterCommand) {
+        List<CommentEntity> commentEntityList = commentRepository.sliceByCommand(commentFilterCommand);
+
+        return commentEntityList.stream().map(Comment::entityToDomain).collect(Collectors.toList());
     }
 
     @Override

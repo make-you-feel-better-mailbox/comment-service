@@ -1,9 +1,6 @@
 package com.onetwo.commentservice.application.service.converter;
 
-import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.response.*;
 import com.onetwo.commentservice.domain.Comment;
 
 public interface CommentUseCaseConverter {
@@ -14,4 +11,6 @@ public interface CommentUseCaseConverter {
     UpdateCommentResponseDto commentToUpdateResponseDto(boolean isUpdateSuccess);
 
     CommentDetailResponseDto commentToDetailResponseDto(Comment comment);
+
+    FilteredCommentResponseDto commentToFilteredResponse(Comment comment);
 }
