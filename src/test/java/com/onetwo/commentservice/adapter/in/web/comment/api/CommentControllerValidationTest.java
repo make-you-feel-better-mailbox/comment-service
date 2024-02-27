@@ -195,4 +195,38 @@ class CommentControllerValidationTest {
         resultActions.andExpect(status().isBadRequest())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("[단위][Web Adapter] Comment 갯수 조회 category validation fail - 실패 테스트")
+    void countCommentCategoryValidationFailTest() throws Exception {
+        //given
+        String testCategory = "badCategory";
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_COUNT + GlobalUrl.PATH_VARIABLE_CATEGORY_WITH_BRACE + GlobalUrl.PATH_VARIABLE_TARGET_ID_WITH_BRACE
+                        , testCategory, targetId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("[단위][Web Adapter] Comment 갯수 조회 target id validation fail - 실패 테스트")
+    void countCommentTargetIdValidationFailTest() throws Exception {
+        //given
+        String testTargetId = "badTargetId";
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_COUNT + GlobalUrl.PATH_VARIABLE_CATEGORY_WITH_BRACE + GlobalUrl.PATH_VARIABLE_TARGET_ID_WITH_BRACE
+                        , category, testTargetId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(print());
+    }
 }

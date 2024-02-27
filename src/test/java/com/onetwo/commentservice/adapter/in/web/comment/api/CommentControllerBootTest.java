@@ -54,6 +54,7 @@ class CommentControllerBootTest {
     private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
+    private final int commentCount = 16;
 
     @Test
     @Transactional
@@ -202,6 +203,42 @@ class CommentControllerBootTest {
                                         fieldWithPath("userId").type(JsonFieldType.STRING).description("작성자 user id"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("comment 본문"),
                                         fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성 날짜 및 시간")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("[통합][Web Adapter] Comment 갯수 조회 - 성공 테스트")
+    void countCommentSuccessTest() throws Exception {
+        //given
+        for (int i = 0; i < commentCount; i++) {
+            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId + i, category, targetId, content + i);
+            registerCommentUseCase.registerComment(registerCommentCommand);
+        }
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_COUNT + GlobalUrl.PATH_VARIABLE_CATEGORY_WITH_BRACE + GlobalUrl.PATH_VARIABLE_TARGET_ID_WITH_BRACE
+                        , category, targetId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .headers(testHeader.getRequestHeader())
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("count-comment",
+                                requestHeaders(
+                                        headerWithName(GlobalStatus.ACCESS_ID).description("서버 Access id"),
+                                        headerWithName(GlobalStatus.ACCESS_KEY).description("서버 Access key")
+                                ),
+                                pathParameters(
+                                        parameterWithName(GlobalUrl.PATH_VARIABLE_CATEGORY).description("조회할 Comment의 category"),
+                                        parameterWithName(GlobalUrl.PATH_VARIABLE_TARGET_ID).description("조회할 Comment의 target id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("commentCount").type(JsonFieldType.NUMBER).description("Comment 갯수")
                                 )
                         )
                 );

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long>, QCommentRepository {
+    Integer countByCategoryAndTargetIdAndState(Integer category, Long targetId, boolean persistenceNotDeleted);
 }

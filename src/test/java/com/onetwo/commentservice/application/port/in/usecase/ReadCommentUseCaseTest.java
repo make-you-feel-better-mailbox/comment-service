@@ -1,9 +1,11 @@
 package com.onetwo.commentservice.application.port.in.usecase;
 
 import com.onetwo.commentservice.application.port.in.command.CommentFilterCommand;
+import com.onetwo.commentservice.application.port.in.command.CountCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
+import com.onetwo.commentservice.application.port.in.response.CountCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.FilteredCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
@@ -26,8 +28,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +55,8 @@ class ReadCommentUseCaseTest {
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
     private final Instant filterEndDate = Instant.parse("4000-01-01T00:00:00Z");
     private final PageRequest pageRequest = PageRequest.of(0, 20);
+
+    private final int commentCount = 167;
 
     @Test
     @DisplayName("[단위][Use Case] Comment 상세 조회 - 성공 테스트")
@@ -123,5 +126,22 @@ class ReadCommentUseCaseTest {
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getContent());
         Assertions.assertFalse(result.getContent().isEmpty());
+    }
+
+    @Test
+    @DisplayName("[단위][Use Case] Comment 갯수 조회 - 성공 테스트")
+    void countCommentUseCaseSuccessTest() {
+        //given
+        CountCommentCommand CountCommentCommand = new CountCommentCommand(category, targetId);
+        CountCommentResponseDto CountCommentResponseDto = new CountCommentResponseDto(commentCount);
+
+        given(readCommentPort.countCommentByCategoryAndTargetId(anyInt(), anyLong())).willReturn(commentCount);
+        given(commentUseCaseConverter.resultToCountResponseDto(anyInt())).willReturn(CountCommentResponseDto);
+        //when
+        CountCommentResponseDto result = readCommentUseCase.getCommentCount(CountCommentCommand);
+
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(commentCount, result.commentCount());
     }
 }

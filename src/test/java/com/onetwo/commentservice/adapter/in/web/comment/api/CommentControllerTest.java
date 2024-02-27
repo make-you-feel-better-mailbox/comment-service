@@ -4,19 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.mapper.CommentDtoMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
-import com.onetwo.commentservice.adapter.in.web.comment.response.CommentDetailResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.DeleteCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.RegisterCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.UpdateCommentResponse;
+import com.onetwo.commentservice.adapter.in.web.comment.response.*;
 import com.onetwo.commentservice.adapter.in.web.config.TestConfig;
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
-import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
+import com.onetwo.commentservice.application.port.in.command.*;
+import com.onetwo.commentservice.application.port.in.response.*;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
@@ -165,6 +156,28 @@ class CommentControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(
                 get(GlobalUrl.COMMENT_ROOT + GlobalUrl.PATH_VARIABLE_COMMENT_ID_WITH_BRACE, commentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("[단위][Web Adapter] Comment 갯수 조회 - 성공 테스트")
+    void countCommentSuccessTest() throws Exception {
+        //given
+        CountCommentCommand countCommentCommand = new CountCommentCommand(category, targetId);
+        CountCommentResponseDto countCommentResponseDto = new CountCommentResponseDto(1016);
+        CommentCountResponse countCommentResponse = new CommentCountResponse(countCommentResponseDto.commentCount());
+
+        when(commentDtoMapper.countRequestToCommand(anyInt(), anyLong())).thenReturn(countCommentCommand);
+        when(readCommentUseCase.getCommentCount(any(CountCommentCommand.class))).thenReturn(countCommentResponseDto);
+        when(commentDtoMapper.dtoToCountResponse(any(CountCommentResponseDto.class))).thenReturn(countCommentResponse);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(GlobalUrl.COMMENT_COUNT + GlobalUrl.PATH_VARIABLE_CATEGORY_WITH_BRACE + GlobalUrl.PATH_VARIABLE_TARGET_ID_WITH_BRACE
+                        , category, targetId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
         //then

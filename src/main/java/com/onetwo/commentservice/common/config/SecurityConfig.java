@@ -22,6 +22,7 @@ public class SecurityConfig {
             public List<MvcRequestMatcher> getMvcRequestMatcherArray() {
                 List<MvcRequestMatcher> mvcRequestMatcherList = new ArrayList<>();
 
+                mvcRequestMatcherList.add(mvc.pattern(HttpMethod.GET, GlobalUrl.COMMENT_COUNT + GlobalUrl.EVERY_UNDER_ROUTE));
                 mvcRequestMatcherList.add(mvc.pattern(HttpMethod.GET, GlobalUrl.COMMENT_ROOT + GlobalUrl.UNDER_ROUTE));
 
                 return mvcRequestMatcherList;

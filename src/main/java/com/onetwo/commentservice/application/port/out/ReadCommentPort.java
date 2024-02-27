@@ -10,4 +10,6 @@ public interface ReadCommentPort {
     Optional<Comment> findById(Long commentId);
 
     List<Comment> filterComment(CommentFilterCommand commentFilterCommand);
+
+    int countCommentByCategoryAndTargetId(Integer category, Long targetId);
 }

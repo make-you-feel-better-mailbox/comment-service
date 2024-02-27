@@ -133,11 +133,19 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
 
         boolean hasNext = commentList.size() > commentFilterCommand.getPageable().getPageSize();
 
-        if (hasNext) commentList.remove(commentList.size() - 1);
+        if (hasNext) commentList.removeLast();
 
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = commentList.stream()
                 .map(commentUseCaseConverter::commentToFilteredResponse).toList();
 
         return new SliceImpl<>(filteredCommentResponseDtoList, commentFilterCommand.getPageable(), hasNext);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CountCommentResponseDto getCommentCount(CountCommentCommand countCommentCommand) {
+        int countComment = readCommentPort.countCommentByCategoryAndTargetId(countCommentCommand.getCategory(), countCommentCommand.getTargetId());
+
+        return commentUseCaseConverter.resultToCountResponseDto(countComment);
     }
 }

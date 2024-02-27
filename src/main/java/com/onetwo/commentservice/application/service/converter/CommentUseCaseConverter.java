@@ -13,4 +13,6 @@ public interface CommentUseCaseConverter {
     CommentDetailResponseDto commentToDetailResponseDto(Comment comment);
 
     FilteredCommentResponseDto commentToFilteredResponse(Comment comment);
+
+    CountCommentResponseDto resultToCountResponseDto(int countComment);
 }

@@ -2,18 +2,9 @@ package com.onetwo.commentservice.adapter.in.web.comment.mapper;
 
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
-import com.onetwo.commentservice.adapter.in.web.comment.response.CommentDetailResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.DeleteCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.RegisterCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.UpdateCommentResponse;
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
-import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
+import com.onetwo.commentservice.adapter.in.web.comment.response.*;
+import com.onetwo.commentservice.application.port.in.command.*;
+import com.onetwo.commentservice.application.port.in.response.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -63,5 +54,15 @@ public class CommentDtoMapperImpl implements CommentDtoMapper {
                 commentDetailResponseDto.content(),
                 commentDetailResponseDto.createdDate()
         );
+    }
+
+    @Override
+    public CountCommentCommand countRequestToCommand(Integer category, Long targetId) {
+        return new CountCommentCommand(category, targetId);
+    }
+
+    @Override
+    public CommentCountResponse dtoToCountResponse(CountCommentResponseDto countCommentResponseDto) {
+        return new CommentCountResponse(countCommentResponseDto.commentCount());
     }
 }

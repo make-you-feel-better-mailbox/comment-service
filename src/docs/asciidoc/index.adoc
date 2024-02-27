@@ -133,6 +133,36 @@ http-response
 
 include::{snippets}/update-comment/http-response.adoc[]
 
+=== Comment counter
+
+path-parameters
+
+include::{snippets}/count-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/count-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/count-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/count-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/count-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/count-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/count-comment/http-response.adoc[]
+
 == 2. Get Filtered Comment
 
 === Filtering Comment

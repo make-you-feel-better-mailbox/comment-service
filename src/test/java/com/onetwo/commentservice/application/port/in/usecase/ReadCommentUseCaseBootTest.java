@@ -1,9 +1,11 @@
 package com.onetwo.commentservice.application.port.in.usecase;
 
 import com.onetwo.commentservice.application.port.in.command.CommentFilterCommand;
+import com.onetwo.commentservice.application.port.in.command.CountCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
+import com.onetwo.commentservice.application.port.in.response.CountCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.FilteredCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.service.service.CommentService;
@@ -39,6 +41,7 @@ class ReadCommentUseCaseBootTest {
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
     private final Instant filterEndDate = Instant.parse("4000-01-01T00:00:00Z");
     private final PageRequest pageRequest = PageRequest.of(0, 20);
+    private final int commentCount = 16;
 
     @Test
     @DisplayName("[단위][Use Case] Comment 상세 조회 - 성공 테스트")
@@ -127,5 +130,27 @@ class ReadCommentUseCaseBootTest {
         Assertions.assertNotNull(result.getContent());
         Assertions.assertFalse(result.getContent().isEmpty());
         Assertions.assertTrue(result.hasNext());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("[통합][Use Case] Comment 갯수 조회 - 성공 테스트")
+    void countCommentUseCaseSuccessTest() {
+        //given
+        CountCommentCommand CountCommentCommand = new CountCommentCommand(category, targetId);
+
+        for (int i = 0; i <= commentCount; i++) {
+            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId + i, category, targetId, content + i);
+            Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
+
+            registerCommentPort.registerComment(comment);
+        }
+
+        //when
+        CountCommentResponseDto result = readCommentUseCase.getCommentCount(CountCommentCommand);
+
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.commentCount() >= commentCount);
     }
 }

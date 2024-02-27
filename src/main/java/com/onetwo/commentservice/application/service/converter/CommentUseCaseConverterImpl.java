@@ -46,4 +46,9 @@ public class CommentUseCaseConverterImpl implements CommentUseCaseConverter {
                 comment.getCreatedAt()
         );
     }
+
+    @Override
+    public CountCommentResponseDto resultToCountResponseDto(int countComment) {
+        return new CountCommentResponseDto(countComment);
+    }
 }

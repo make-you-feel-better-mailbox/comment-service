@@ -6,6 +6,7 @@ import com.onetwo.commentservice.application.port.in.command.CommentFilterComman
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
+import com.onetwo.commentservice.common.GlobalStatus;
 import com.onetwo.commentservice.domain.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,13 @@ public class CommentPersistenceAdapter implements RegisterCommentPort, ReadComme
         List<CommentEntity> commentEntityList = commentRepository.sliceByCommand(commentFilterCommand);
 
         return commentEntityList.stream().map(Comment::entityToDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public int countCommentByCategoryAndTargetId(Integer category, Long targetId) {
+        Integer countComment = commentRepository.countByCategoryAndTargetIdAndState(category, targetId, GlobalStatus.PERSISTENCE_NOT_DELETED);
+
+        return countComment == null ? 0 : countComment;
     }
 
     @Override
