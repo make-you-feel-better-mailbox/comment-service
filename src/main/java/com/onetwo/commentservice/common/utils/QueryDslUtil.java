@@ -1,3 +1,4 @@
+
 package com.onetwo.commentservice.common.utils;
 
 import com.querydsl.core.BooleanBuilder;
@@ -8,6 +9,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import java.time.Instant;
 
 public class QueryDslUtil {
+
 
     public static void ifConditionExistAddEqualPredicate(Long condition, NumberPath<Long> path, BooleanBuilder booleanBuilder) {
         if (isNotNull(condition)) booleanBuilder.and(path.eq(condition));

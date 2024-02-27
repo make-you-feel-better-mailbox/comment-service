@@ -1,6 +1,7 @@
 package com.onetwo.commentservice.adapter.in.web.comment.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.onetwo.commentservice.adapter.in.web.config.TestHeader;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
@@ -38,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @Import(TestHeader.class)
 class CommentFilterControllerBootTest {
+
 
     @Autowired
     private MockMvc mockMvc;

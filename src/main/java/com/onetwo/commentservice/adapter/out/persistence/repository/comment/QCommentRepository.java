@@ -1,3 +1,4 @@
+
 package com.onetwo.commentservice.adapter.out.persistence.repository.comment;
 
 import com.onetwo.commentservice.adapter.out.persistence.entity.CommentEntity;

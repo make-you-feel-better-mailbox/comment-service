@@ -1,3 +1,4 @@
+
 package com.onetwo.commentservice.application.port;
 
 import jakarta.validation.constraints.NotNull;
