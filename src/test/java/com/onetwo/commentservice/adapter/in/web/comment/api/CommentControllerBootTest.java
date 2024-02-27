@@ -50,7 +50,8 @@ class CommentControllerBootTest {
     @Autowired
     private TestHeader testHeader;
 
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -59,7 +60,7 @@ class CommentControllerBootTest {
     @DisplayName("[통합][Web Adapter] Comment 등록 - 성공 테스트")
     void postCommentSuccessTest() throws Exception {
         //given
-        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(postingId, content);
+        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(category, targetId, content);
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -78,7 +79,8 @@ class CommentControllerBootTest {
                                         headerWithName(GlobalStatus.ACCESS_TOKEN).description("유저의 access-token")
                                 ),
                                 requestFields(
-                                        fieldWithPath("postingId").type(JsonFieldType.NUMBER).description("등록할 comment의 posting id"),
+                                        fieldWithPath("category").type(JsonFieldType.NUMBER).description("등록할 comment의 목표 category"),
+                                        fieldWithPath("targetId").type(JsonFieldType.NUMBER).description("등록할 comment의 목표 target id"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("등록할 comment 본문")
                                 ),
                                 responseFields(
@@ -94,7 +96,7 @@ class CommentControllerBootTest {
     @DisplayName("[통합][Web Adapter] Comment 삭제 - 성공 테스트")
     void deleteCommentSuccessTest() throws Exception {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         RegisterCommentResponseDto registerCommentResponseDto = registerCommentUseCase.registerComment(registerCommentCommand);
 
         Long commentId = registerCommentResponseDto.commentId();
@@ -131,7 +133,7 @@ class CommentControllerBootTest {
         //given
         UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest(content);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         RegisterCommentResponseDto registerCommentResponseDto = registerCommentUseCase.registerComment(registerCommentCommand);
 
         Long commentId = registerCommentResponseDto.commentId();
@@ -170,7 +172,7 @@ class CommentControllerBootTest {
     @DisplayName("[통합][Web Adapter] Comment 상세 조회 - 성공 테스트")
     void findCommentDetailsSuccessTest() throws Exception {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         RegisterCommentResponseDto registerCommentResponseDto = registerCommentUseCase.registerComment(registerCommentCommand);
 
         Long commentId = registerCommentResponseDto.commentId();
@@ -195,7 +197,8 @@ class CommentControllerBootTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("comment id"),
-                                        fieldWithPath("postingId").type(JsonFieldType.NUMBER).description("comment가 달린 Posting id"),
+                                        fieldWithPath("category").type(JsonFieldType.NUMBER).description("comment가 달린 target category"),
+                                        fieldWithPath("targetId").type(JsonFieldType.NUMBER).description("comment가 달린 target id"),
                                         fieldWithPath("userId").type(JsonFieldType.STRING).description("작성자 user id"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("comment 본문"),
                                         fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성 날짜 및 시간")

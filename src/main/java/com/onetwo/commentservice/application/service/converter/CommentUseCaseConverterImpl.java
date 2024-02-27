@@ -27,7 +27,8 @@ public class CommentUseCaseConverterImpl implements CommentUseCaseConverter {
     public CommentDetailResponseDto commentToDetailResponseDto(Comment comment) {
         return new CommentDetailResponseDto(
                 comment.getId(),
-                comment.getPostingId(),
+                comment.getCategory(),
+                comment.getTargetId(),
                 comment.getUserId(),
                 comment.getContent(),
                 comment.getCreatedAt()
@@ -38,7 +39,8 @@ public class CommentUseCaseConverterImpl implements CommentUseCaseConverter {
     public FilteredCommentResponseDto commentToFilteredResponse(Comment comment) {
         return new FilteredCommentResponseDto(
                 comment.getId(),
-                comment.getPostingId(),
+                comment.getCategory(),
+                comment.getTargetId(),
                 comment.getUserId(),
                 comment.getContent(),
                 comment.getCreatedAt()

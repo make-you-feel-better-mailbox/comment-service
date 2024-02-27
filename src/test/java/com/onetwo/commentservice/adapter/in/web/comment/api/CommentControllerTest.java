@@ -74,7 +74,8 @@ class CommentControllerTest {
     @MockBean
     private CommentDtoMapper commentDtoMapper;
 
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final Long commentId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
@@ -85,8 +86,8 @@ class CommentControllerTest {
     @DisplayName("[단위][Web Adapter] Comment 등록 - 성공 테스트")
     void postCommentSuccessTest() throws Exception {
         //given
-        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(postingId, content);
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(category, targetId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         RegisterCommentResponseDto registerCommentResponseDto = new RegisterCommentResponseDto(commentId, true);
         RegisterCommentResponse registerCommentResponse = new RegisterCommentResponse(commentId, true);
 
@@ -155,8 +156,8 @@ class CommentControllerTest {
     void findCommentDetailSuccessTest() throws Exception {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, postingId, userId, content, createdDate);
-        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, postingId, userId, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, content, createdDate);
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, category, targetId, userId, content, createdDate);
 
         when(commentDtoMapper.findRequestToCommand(anyLong())).thenReturn(findCommentDetailCommand);
         when(readCommentUseCase.findCommentsDetail(any(FindCommentDetailCommand.class))).thenReturn(commentDetailResponseDto);

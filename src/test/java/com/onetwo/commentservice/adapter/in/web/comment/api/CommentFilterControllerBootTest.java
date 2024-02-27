@@ -51,8 +51,10 @@ class CommentFilterControllerBootTest {
     @Autowired
     private TestHeader testHeader;
 
-    private final long postingId = 1L;
-    private final String postingIdPath = "postingId";
+    private final Integer category = 1;
+    private final Long targetId = 1L;
+    private final String categoryPath = "category";
+    private final String targetIdPath = "targetId";
     private final String content = "content";
     private final String contentPath = "content";
     private final String pageNumber = "pageNumber";
@@ -70,14 +72,15 @@ class CommentFilterControllerBootTest {
     void getFilteredCommentSuccessTest() throws Exception {
         //given
         for (int i = 1; i <= pageRequest.getPageSize(); i++) {
-            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content + i);
+            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content + i);
             registerCommentUseCase.registerComment(registerCommentCommand);
         }
 
         String queryString = UriComponentsBuilder.newInstance()
                 .queryParam(pageNumber, pageRequest.getPageNumber())
                 .queryParam(pageSize, pageRequest.getPageSize())
-                .queryParam(postingIdPath, postingId)
+                .queryParam(categoryPath, category)
+                .queryParam(targetIdPath, targetId)
                 .queryParam(userIdQueryStringPath, userId)
                 .queryParam(filterStartDatePath, filterStartDate)
                 .queryParam(filterEndDatePath, filterEndDate)
@@ -100,7 +103,8 @@ class CommentFilterControllerBootTest {
                                         headerWithName(GlobalStatus.ACCESS_KEY).description("서버 Access key")
                                 ),
                                 queryParameters(
-                                        parameterWithName(postingIdPath).description("조회할 comment들이 달린 posting id"),
+                                        parameterWithName(categoryPath).description("조회할 comment들이 달린 target category"),
+                                        parameterWithName(targetIdPath).description("조회할 comment들이 달린 target id"),
                                         parameterWithName(pageNumber).description("조회할 comment slice 페이지 번호"),
                                         parameterWithName(pageSize).description("조회할 comment slice size"),
                                         parameterWithName(userIdQueryStringPath).description("조회할 comment의 작성자 user id"),
@@ -111,7 +115,8 @@ class CommentFilterControllerBootTest {
                                 responseFields(
                                         fieldWithPath("content[]").type(JsonFieldType.ARRAY).description("Comment List"),
                                         fieldWithPath("content[].commentId").type(JsonFieldType.NUMBER).description("Comment의 id"),
-                                        fieldWithPath("content[].postingId").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 Posting id"),
+                                        fieldWithPath("content[].category").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 target category (1: posting, 2: comment)"),
+                                        fieldWithPath("content[].targetId").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 target id"),
                                         fieldWithPath("content[].userId").type(JsonFieldType.STRING).description("Comment 작성자 user id"),
                                         fieldWithPath("content[].content").type(JsonFieldType.STRING).description("Comment 본문"),
                                         fieldWithPath("content[].createdDate").type(JsonFieldType.STRING).description("Comment 작성 일자"),

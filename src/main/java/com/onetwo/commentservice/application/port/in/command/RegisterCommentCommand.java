@@ -12,14 +12,18 @@ public final class RegisterCommentCommand extends SelfValidating<RegisterComment
     private final String userId;
 
     @NotNull
-    private final Long postingId;
+    private Integer category;
+
+    @NotNull
+    private Long targetId;
 
     @NotEmpty
     private final String content;
 
-    public RegisterCommentCommand(String userId, Long postingId, String content) {
+    public RegisterCommentCommand(String userId, Integer category, Long targetId, String content) {
         this.userId = userId;
-        this.postingId = postingId;
+        this.category = category;
+        this.targetId = targetId;
         this.content = content;
         this.validateSelf();
     }

@@ -61,7 +61,8 @@ class CommentControllerValidationTest {
     @MockBean
     private CommentDtoMapper commentDtoMapper;
 
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final Long commentId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
@@ -69,10 +70,29 @@ class CommentControllerValidationTest {
     @ParameterizedTest
     @NullSource
     @WithMockUser(username = userId)
-    @DisplayName("[단위][Web Adapter] Comment 등록 postingId validation fail - 실패 테스트")
-    void postCommentPostingIdValidationFailTest(Long testPostingId) throws Exception {
+    @DisplayName("[단위][Web Adapter] Comment 등록 category validation fail - 실패 테스트")
+    void postCommentCategoryValidationFailTest(Integer testCategory) throws Exception {
         //given
-        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(testPostingId, content);
+        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(testCategory, targetId, content);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post(GlobalUrl.COMMENT_ROOT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerCommentRequest))
+                        .accept(MediaType.APPLICATION_JSON));
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @WithMockUser(username = userId)
+    @DisplayName("[단위][Web Adapter] Comment 등록 targetId validation fail - 실패 테스트")
+    void postCommentTargetIdValidationFailTest(Long testTargetId) throws Exception {
+        //given
+        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(category, testTargetId, content);
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -91,7 +111,7 @@ class CommentControllerValidationTest {
     @DisplayName("[단위][Web Adapter] Comment 등록 content validation fail - 실패 테스트")
     void postCommentContentValidationFailTest(String testContent) throws Exception {
         //given
-        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(postingId, testContent);
+        RegisterCommentRequest registerCommentRequest = new RegisterCommentRequest(category, targetId, testContent);
 
         //when
         ResultActions resultActions = mockMvc.perform(

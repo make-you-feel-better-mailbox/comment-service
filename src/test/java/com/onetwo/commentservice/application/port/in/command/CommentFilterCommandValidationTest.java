@@ -13,7 +13,8 @@ import java.time.Instant;
 
 class CommentFilterCommandValidationTest {
 
-    private final long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String content = "content";
     private final String userId = "testUserId";
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
@@ -24,22 +25,30 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation test - 성공 테스트")
     void commentFilterCommandValidationSuccessTest() {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, userId, content, filterStartDate, filterEndDate, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest));
     }
 
     @Test
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation null test - 성공 테스트")
     void commentFilterCommandValidationNullSuccessTest() {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, null, null, null, null, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, null, null, null, null, pageRequest));
     }
 
     @ParameterizedTest
     @NullSource
-    @DisplayName("[단위][Command Validation] Comment Filter Command posting id Validation fail test - 실패 테스트")
-    void commentFilterCommandUserIdValidationFailTest(Long testPostingId) {
+    @DisplayName("[단위][Command Validation] Comment Filter Command target id Validation fail test - 실패 테스트")
+    void commentFilterCommandTargetIdValidationFailTest(Long testTargetId) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new CommentFilterCommand(testPostingId, userId, content, filterStartDate, filterEndDate, pageRequest));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new CommentFilterCommand(category, testTargetId, userId, content, filterStartDate, filterEndDate, pageRequest));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @DisplayName("[단위][Command Validation] Comment Filter Command category Validation fail test - 실패 테스트")
+    void commentFilterCommandCategorydValidationFailTest(Integer testCategory) {
+        //given when then
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new CommentFilterCommand(testCategory, targetId, userId, content, filterStartDate, filterEndDate, pageRequest));
     }
 
     @ParameterizedTest
@@ -47,7 +56,7 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command page request Validation fail test - 실패 테스트")
     void commentFilterCommandPageRequestValidationFailTest(PageRequest testPageRequest) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new CommentFilterCommand(postingId, userId, content, filterStartDate, filterEndDate, testPageRequest));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, testPageRequest));
     }
 
     @ParameterizedTest
@@ -55,7 +64,7 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation user id - 성공 테스트")
     void commentFilterCommandValidationUserIdSuccessTest(String testUserId) {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, testUserId, content, filterStartDate, filterEndDate, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, testUserId, content, filterStartDate, filterEndDate, pageRequest));
     }
 
     @ParameterizedTest
@@ -63,7 +72,7 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation content - 성공 테스트")
     void commentFilterCommandValidationContentSuccessTest(String testContent) {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, userId, testContent, filterStartDate, filterEndDate, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, userId, testContent, filterStartDate, filterEndDate, pageRequest));
     }
 
     @ParameterizedTest
@@ -71,7 +80,7 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation start date - 성공 테스트")
     void commentFilterCommandValidationStartDateSuccessTest(Instant testStartDate) {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, userId, content, testStartDate, filterEndDate, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, userId, content, testStartDate, filterEndDate, pageRequest));
     }
 
     @ParameterizedTest
@@ -79,6 +88,6 @@ class CommentFilterCommandValidationTest {
     @DisplayName("[단위][Command Validation] Comment Filter Command Validation end date - 성공 테스트")
     void commentFilterCommandValidationEndDateSuccessTest(Instant testEndDate) {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(postingId, userId, content, filterStartDate, testEndDate, pageRequest));
+        Assertions.assertDoesNotThrow(() -> new CommentFilterCommand(category, targetId, userId, content, filterStartDate, testEndDate, pageRequest));
     }
 }

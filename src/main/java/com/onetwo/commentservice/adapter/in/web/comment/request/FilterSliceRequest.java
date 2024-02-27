@@ -4,7 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 
-public record FilterSliceRequest(@NotNull Long postingId,
+public record FilterSliceRequest(@NotNull Integer category,
+                                 @NotNull Long targetId,
                                  String userId,
                                  String content,
                                  Instant filterStartDate,

@@ -14,7 +14,9 @@ import java.time.Instant;
 public class Comment extends BaseDomain {
 
     private Long id;
-    private Long postingId;
+    /* 1: posing 2:comment */
+    private Integer category;
+    private Long targetId;
     private String userId;
     private String content;
     private Boolean state;
@@ -22,7 +24,8 @@ public class Comment extends BaseDomain {
     public static Comment createNewCommentByCommand(RegisterCommentCommand registerCommentCommand) {
         Comment comment = new Comment(
                 null,
-                registerCommentCommand.getPostingId(),
+                registerCommentCommand.getCategory(),
+                registerCommentCommand.getTargetId(),
                 registerCommentCommand.getUserId(),
                 registerCommentCommand.getContent(),
                 false);
@@ -35,7 +38,8 @@ public class Comment extends BaseDomain {
     public static Comment entityToDomain(CommentEntity commentEntity) {
         Comment comment = new Comment(
                 commentEntity.getId(),
-                commentEntity.getPostingId(),
+                commentEntity.getCategory(),
+                commentEntity.getTargetId(),
                 commentEntity.getUserId(),
                 commentEntity.getContent(),
                 commentEntity.getState()

@@ -38,7 +38,8 @@ public class QCommentRepositoryImpl extends QuerydslRepositorySupport implements
     private Predicate filterCondition(CommentFilterCommand commentFilterCommand) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        QueryDslUtil.ifConditionExistAddEqualPredicate(commentFilterCommand.getPostingId(), commentEntity.postingId, booleanBuilder);
+        QueryDslUtil.ifConditionExistAddEqualPredicate(commentFilterCommand.getCategory(), commentEntity.category, booleanBuilder);
+        QueryDslUtil.ifConditionExistAddEqualPredicate(commentFilterCommand.getTargetId(), commentEntity.targetId, booleanBuilder);
         QueryDslUtil.ifConditionExistAddEqualPredicate(commentFilterCommand.getUserId(), commentEntity.userId, booleanBuilder);
         QueryDslUtil.ifConditionExistAddLikePredicate(commentFilterCommand.getContent(), commentEntity.content, booleanBuilder);
         QueryDslUtil.ifConditionExistAddGoePredicate(commentFilterCommand.getFilterStartDate(), commentEntity.createdAt, booleanBuilder);

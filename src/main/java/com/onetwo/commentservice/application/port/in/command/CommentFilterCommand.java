@@ -11,7 +11,10 @@ import java.time.Instant;
 public final class CommentFilterCommand extends SliceRequest<CommentFilterCommand> {
 
     @NotNull
-    private final Long postingId;
+    private final Integer category;
+
+    @NotNull
+    private final Long targetId;
 
     private final String userId;
 
@@ -22,9 +25,10 @@ public final class CommentFilterCommand extends SliceRequest<CommentFilterComman
     private final Instant filterEndDate;
 
 
-    public CommentFilterCommand(Long postingId, String userId, String content, Instant filterStartDate, Instant filterEndDate, Pageable pageable) {
+    public CommentFilterCommand(Integer category, Long targetId, String userId, String content, Instant filterStartDate, Instant filterEndDate, Pageable pageable) {
         super(pageable);
-        this.postingId = postingId;
+        this.category = category;
+        this.targetId = targetId;
         this.userId = userId;
         this.content = content;
         this.filterStartDate = filterStartDate;

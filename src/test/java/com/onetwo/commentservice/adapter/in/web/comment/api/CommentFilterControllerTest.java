@@ -57,8 +57,10 @@ class CommentFilterControllerTest {
     @MockBean
     private CommentFilterDtoMapper commentFilterDtoMapper;
 
-    private final long postingId = 1L;
-    private final String postingIdPath = "postingId";
+    private final Integer category = 1;
+    private final Long targetId = 1L;
+    private final String categoryPath = "category";
+    private final String targetIdPath = "targetId";
     private final String content = "content";
     private final String contentPath = "content";
     private final String pageNumber = "pageNumber";
@@ -75,12 +77,12 @@ class CommentFilterControllerTest {
     @DisplayName("[단위][Web Adapter] Comment Filter 조회 성공 - 성공 테스트")
     void getFilteredCommentSuccessTest() throws Exception {
         //given
-        CommentFilterCommand commentFilterCommand = new CommentFilterCommand(postingId, userId, content, filterStartDate, filterEndDate, pageRequest);
+        CommentFilterCommand commentFilterCommand = new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest);
 
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = new ArrayList<>();
 
         for (int i = 1; i <= pageRequest.getPageSize(); i++) {
-            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, postingId, userId, content + i, Instant.now());
+            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, category, targetId, userId, content + i, Instant.now());
             filteredCommentResponseDtoList.add(testFilteredComment);
         }
 
@@ -89,7 +91,8 @@ class CommentFilterControllerTest {
         List<FilteredCommentResponse> filteredCommentResponseList = filteredCommentResponseDtoList.stream()
                 .map(responseDto -> new FilteredCommentResponse(
                         responseDto.commentId(),
-                        responseDto.postingId(),
+                        responseDto.category(),
+                        responseDto.targetId(),
                         responseDto.userId(),
                         responseDto.content(),
                         responseDto.createdDate()
@@ -104,7 +107,8 @@ class CommentFilterControllerTest {
         String queryString = UriComponentsBuilder.newInstance()
                 .queryParam(pageNumber, pageRequest.getPageNumber())
                 .queryParam(pageSize, pageRequest.getPageSize())
-                .queryParam(postingIdPath, postingId)
+                .queryParam(categoryPath, category)
+                .queryParam(targetIdPath, targetId)
                 .queryParam(userIdQueryStringPath, userId)
                 .queryParam(filterStartDatePath, filterStartDate)
                 .queryParam(filterEndDatePath, filterEndDate)

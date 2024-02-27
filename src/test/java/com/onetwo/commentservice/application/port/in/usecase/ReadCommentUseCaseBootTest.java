@@ -32,7 +32,8 @@ class ReadCommentUseCaseBootTest {
     private RegisterCommentPort registerCommentPort;
 
     private final Long commentId = 1L;
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
@@ -43,7 +44,7 @@ class ReadCommentUseCaseBootTest {
     @DisplayName("[단위][Use Case] Comment 상세 조회 - 성공 테스트")
     void readCommentUseCaseSuccessTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         Comment savedComment = registerCommentPort.registerComment(comment);
@@ -71,7 +72,7 @@ class ReadCommentUseCaseBootTest {
     @DisplayName("[단위][Use Case] Comment 상세 조회 comment already deleted - 실패 테스트")
     void readCommentUseCaseCommentAlreadyDeletedFailTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         comment.deleteComment();
@@ -89,12 +90,12 @@ class ReadCommentUseCaseBootTest {
     void commentFilterUseCaseSuccessTest() {
         //given
         for (int i = 1; i <= pageRequest.getPageSize() + 1; i++) {
-            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content + i);
+            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content + i);
             Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
             registerCommentPort.registerComment(comment);
         }
 
-        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(postingId, userId, content, filterStartDate, filterEndDate, pageRequest);
+        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest);
 
         //when
         Slice<FilteredCommentResponseDto> result = readCommentUseCase.filterComment(findCommentDetailCommand);
@@ -111,12 +112,12 @@ class ReadCommentUseCaseBootTest {
     void commentFilterUseCaseNullCaseSuccessTest() {
         //given
         for (int i = 1; i <= pageRequest.getPageSize() + 1; i++) {
-            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId + i, postingId, content + i);
+            RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId + i, category, targetId, content + i);
             Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
             registerCommentPort.registerComment(comment);
         }
 
-        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(postingId, null, null, null, null, pageRequest);
+        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(category, targetId, null, null, null, null, pageRequest);
 
         //when
         Slice<FilteredCommentResponseDto> result = readCommentUseCase.filterComment(findCommentDetailCommand);

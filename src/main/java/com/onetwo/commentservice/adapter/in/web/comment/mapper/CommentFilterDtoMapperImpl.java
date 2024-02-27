@@ -22,7 +22,8 @@ public class CommentFilterDtoMapperImpl implements CommentFilterDtoMapper {
         );
 
         return new CommentFilterCommand(
-                filterSliceRequest.postingId(),
+                filterSliceRequest.category(),
+                filterSliceRequest.targetId(),
                 filterSliceRequest.userId(),
                 filterSliceRequest.content(),
                 filterSliceRequest.filterStartDate(),
@@ -36,7 +37,8 @@ public class CommentFilterDtoMapperImpl implements CommentFilterDtoMapper {
         List<FilteredCommentResponse> filteredCommentResponseList = filteredCommentResponseDto.getContent().stream()
                 .map(response -> new FilteredCommentResponse(
                         response.commentId(),
-                        response.postingId(),
+                        response.category(),
+                        response.targetId(),
                         response.userId(),
                         response.content(),
                         response.createdDate()

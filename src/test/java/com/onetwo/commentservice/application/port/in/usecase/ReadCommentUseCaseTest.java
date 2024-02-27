@@ -46,7 +46,8 @@ class ReadCommentUseCaseTest {
     private CommentUseCaseConverter commentUseCaseConverter;
 
     private final long commentId = 1L;
-    private final long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
     private final Instant createdDate = Instant.now();
@@ -59,9 +60,9 @@ class ReadCommentUseCaseTest {
     void readCommentUseCaseSuccessTest() {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, postingId, userId, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, content, createdDate);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
@@ -91,7 +92,7 @@ class ReadCommentUseCaseTest {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         comment.deleteComment();
@@ -106,11 +107,11 @@ class ReadCommentUseCaseTest {
     @DisplayName("[단위][Use Case] Comment Filter - 성공 테스트")
     void commentFilterUseCaseSuccessTest() {
         //given
-        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(postingId, userId, content, filterStartDate, filterEndDate, pageRequest);
+        CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest);
 
-        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, postingId, userId, content, createdDate);
+        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, category, targetId, userId, content, createdDate);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.filterComment(any(CommentFilterCommand.class))).willReturn(List.of(comment));

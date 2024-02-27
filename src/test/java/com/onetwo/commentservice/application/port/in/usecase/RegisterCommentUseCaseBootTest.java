@@ -16,7 +16,8 @@ class RegisterCommentUseCaseBootTest {
     @Autowired
     private RegisterCommentUseCase registerCommentUseCase;
 
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -24,7 +25,7 @@ class RegisterCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 등록 - 성공 테스트")
     void registerCommentUseCaseSuccessTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
 
         //when
         RegisterCommentResponseDto result = registerCommentUseCase.registerComment(registerCommentCommand);

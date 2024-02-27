@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class CommentDtoMapperImpl implements CommentDtoMapper {
     @Override
     public RegisterCommentCommand registerRequestToCommand(String userId, RegisterCommentRequest registerCommentRequest) {
-        return new RegisterCommentCommand(userId, registerCommentRequest.postingId(), registerCommentRequest.content());
+        return new RegisterCommentCommand(userId, registerCommentRequest.category(), registerCommentRequest.targetId(), registerCommentRequest.content());
     }
 
     @Override
@@ -57,7 +57,8 @@ public class CommentDtoMapperImpl implements CommentDtoMapper {
     public CommentDetailResponse dtoToDetailResponse(CommentDetailResponseDto commentDetailResponseDto) {
         return new CommentDetailResponse(
                 commentDetailResponseDto.commentId(),
-                commentDetailResponseDto.postingId(),
+                commentDetailResponseDto.category(),
+                commentDetailResponseDto.targetId(),
                 commentDetailResponseDto.userId(),
                 commentDetailResponseDto.content(),
                 commentDetailResponseDto.createdDate()

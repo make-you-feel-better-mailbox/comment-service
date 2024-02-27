@@ -40,7 +40,8 @@ class UpdateCommentUseCaseTest {
     private CommentUseCaseConverter commentUseCaseConverter;
 
     private final Long commentId = 1L;
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -51,7 +52,7 @@ class UpdateCommentUseCaseTest {
         UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, content);
         UpdateCommentResponseDto UpdateCommentResponseDto = new UpdateCommentResponseDto(true);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
@@ -82,7 +83,7 @@ class UpdateCommentUseCaseTest {
         //given
         UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, userId, content);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         comment.deleteComment();
@@ -101,7 +102,7 @@ class UpdateCommentUseCaseTest {
 
         UpdateCommentCommand UpdateCommentCommand = new UpdateCommentCommand(commentId, wrongUserId, content);
 
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
