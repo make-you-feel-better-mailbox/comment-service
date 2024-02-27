@@ -7,9 +7,9 @@ import com.onetwo.commentservice.application.port.in.response.CommentDetailRespo
 import com.onetwo.commentservice.application.port.in.response.FilteredCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.service.service.CommentService;
-import com.onetwo.commentservice.common.exceptions.BadRequestException;
-import com.onetwo.commentservice.common.exceptions.NotFoundResourceException;
 import com.onetwo.commentservice.domain.Comment;
+import onetwo.mailboxcommonconfig.common.exceptions.BadRequestException;
+import onetwo.mailboxcommonconfig.common.exceptions.NotFoundResourceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
