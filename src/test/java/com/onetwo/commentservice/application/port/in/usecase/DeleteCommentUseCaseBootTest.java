@@ -4,9 +4,9 @@ import com.onetwo.commentservice.application.port.in.command.DeleteCommentComman
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
-import com.onetwo.commentservice.common.exceptions.BadRequestException;
-import com.onetwo.commentservice.common.exceptions.NotFoundResourceException;
 import com.onetwo.commentservice.domain.Comment;
+import onetwo.mailboxcommonconfig.common.exceptions.BadRequestException;
+import onetwo.mailboxcommonconfig.common.exceptions.NotFoundResourceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,8 @@ class DeleteCommentUseCaseBootTest {
     private RegisterCommentPort registerCommentPort;
 
     private final Long commentId = 1L;
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -33,7 +34,7 @@ class DeleteCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 삭제 - 성공 테스트")
     void deleteCommentUseCaseSuccessTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         Comment savedComment = registerCommentPort.registerComment(comment);
@@ -62,7 +63,7 @@ class DeleteCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 삭제 comment already deleted - 실패 테스트")
     void deleteCommentUseCaseCommentAlreadyDeletedFailTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         comment.deleteComment();
@@ -79,7 +80,7 @@ class DeleteCommentUseCaseBootTest {
     @DisplayName("[단위][Use Case] Comment 삭제 user id does not match - 실패 테스트")
     void deleteCommentUseCaseUserIdDoesNotMatchFailTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         Comment savedComment = registerCommentPort.registerComment(comment);

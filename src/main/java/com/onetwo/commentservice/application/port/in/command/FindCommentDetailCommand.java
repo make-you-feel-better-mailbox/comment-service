@@ -1,8 +1,8 @@
 package com.onetwo.commentservice.application.port.in.command;
 
-import com.onetwo.commentservice.application.port.SelfValidating;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import onetwo.mailboxcommonconfig.common.SelfValidating;
 
 @Getter
 public final class FindCommentDetailCommand extends SelfValidating<FindCommentDetailCommand> {

@@ -30,7 +30,8 @@ class RegisterCommentUseCaseTest {
     private CommentUseCaseConverter commentUseCaseConverter;
 
     private final Long commentId = 1L;
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -38,7 +39,7 @@ class RegisterCommentUseCaseTest {
     @DisplayName("[단위][Use Case] Comment 등록 - 성공 테스트")
     void registerCommentUseCaseSuccessTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
 
         RegisterCommentResponseDto registerCommentResponseDto = new RegisterCommentResponseDto(commentId, true);
 

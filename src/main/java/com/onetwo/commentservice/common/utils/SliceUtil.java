@@ -1,4 +1,5 @@
-package com.onetwo.postservice.common.utils;
+package com.onetwo.commentservice.common.utils;
+
 
 public class SliceUtil {
 

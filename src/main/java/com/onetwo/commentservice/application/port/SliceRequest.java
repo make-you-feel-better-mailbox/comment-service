@@ -1,7 +1,9 @@
-package com.onetwo.postservice.application.port;
+
+package com.onetwo.commentservice.application.port;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import onetwo.mailboxcommonconfig.common.SelfValidating;
 import org.springframework.data.domain.Pageable;
 
 @Getter
@@ -10,7 +12,7 @@ public abstract class SliceRequest<T> extends SelfValidating<T> {
     @NotNull
     private final Pageable pageable;
 
-    public SliceRequest(Pageable pageable) {
+    protected SliceRequest(Pageable pageable) {
         this.pageable = pageable;
     }
 }

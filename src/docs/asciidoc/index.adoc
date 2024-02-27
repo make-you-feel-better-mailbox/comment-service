@@ -1,4 +1,4 @@
-= User Service API Document
+= Comment Service API Document
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
@@ -24,7 +24,7 @@ endif::[]
 |===
 //표(table)의 설정 끝.
 
-[[Notice-Service-API]]
+[[Comment-Service-API]]
 == 1. Comment
 
 === Register Comment
@@ -132,3 +132,65 @@ include::{snippets}/update-comment/response-body.adoc[]
 http-response
 
 include::{snippets}/update-comment/http-response.adoc[]
+
+=== Comment counter
+
+path-parameters
+
+include::{snippets}/count-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/count-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/count-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/count-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/count-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/count-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/count-comment/http-response.adoc[]
+
+== 2. Get Filtered Comment
+
+=== Filtering Comment
+
+query-parameters
+
+include::{snippets}/filtering-comment/query-parameters.adoc[]
+
+http-request
+
+include::{snippets}/filtering-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/filtering-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/filtering-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/filtering-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/filtering-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/filtering-comment/http-response.adoc[]

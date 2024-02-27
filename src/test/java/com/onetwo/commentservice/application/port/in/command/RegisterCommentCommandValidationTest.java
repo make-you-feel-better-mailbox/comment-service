@@ -10,7 +10,8 @@ import org.junit.jupiter.params.provider.NullSource;
 
 class RegisterCommentCommandValidationTest {
 
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
 
@@ -18,7 +19,7 @@ class RegisterCommentCommandValidationTest {
     @DisplayName("[단위][Command Validation] Register Comment Command Validation test - 성공 테스트")
     void registerCommentCommandValidationTest() {
         //given when then
-        Assertions.assertDoesNotThrow(() -> new RegisterCommentCommand(userId, postingId, content));
+        Assertions.assertDoesNotThrow(() -> new RegisterCommentCommand(userId, category, targetId, content));
     }
 
     @ParameterizedTest
@@ -26,15 +27,23 @@ class RegisterCommentCommandValidationTest {
     @DisplayName("[단위][Command Validation] Register Comment Command user Id Validation fail test - 실패 테스트")
     void registerCommentCommandUserIdValidationFailTest(String testUserId) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(testUserId, postingId, content));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(testUserId, category, targetId, content));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @DisplayName("[단위][Command Validation] Register Comment Command category Validation fail test - 실패 테스트")
+    void registerCommentCommandCategoryValidationFailTest(Integer testCategory) {
+        //given when then
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(userId, testCategory, targetId, content));
     }
 
     @ParameterizedTest
     @NullSource
     @DisplayName("[단위][Command Validation] Register Comment Command posting Id Validation fail test - 실패 테스트")
-    void registerCommentCommandPostingIdValidationFailTest(Long testPostingId) {
+    void registerCommentCommandPostingIdValidationFailTest(Long testTargetId) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(userId, testPostingId, content));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(userId, category, testTargetId, content));
     }
 
     @ParameterizedTest
@@ -42,6 +51,6 @@ class RegisterCommentCommandValidationTest {
     @DisplayName("[단위][Command Validation] Register Comment Command content Validation fail test - 실패 테스트")
     void registerCommentCommandContentValidationFailTest(String testContent) {
         //given when then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(userId, postingId, testContent));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> new RegisterCommentCommand(userId, category, targetId, testContent));
     }
 }

@@ -3,18 +3,9 @@ package com.onetwo.commentservice.adapter.in.web.comment.api;
 import com.onetwo.commentservice.adapter.in.web.comment.mapper.CommentDtoMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
-import com.onetwo.commentservice.adapter.in.web.comment.response.CommentDetailResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.DeleteCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.RegisterCommentResponse;
-import com.onetwo.commentservice.adapter.in.web.comment.response.UpdateCommentResponse;
-import com.onetwo.commentservice.application.port.in.command.DeleteCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
-import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
-import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
-import com.onetwo.commentservice.application.port.in.response.CommentDetailResponseDto;
-import com.onetwo.commentservice.application.port.in.response.DeleteCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
-import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
+import com.onetwo.commentservice.adapter.in.web.comment.response.*;
+import com.onetwo.commentservice.application.port.in.command.*;
+import com.onetwo.commentservice.application.port.in.response.*;
 import com.onetwo.commentservice.application.port.in.usecase.DeleteCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
@@ -95,5 +86,20 @@ public class CommentController {
         FindCommentDetailCommand findCommentDetailCommand = commentDtoMapper.findRequestToCommand(commentId);
         CommentDetailResponseDto commentDetailResponseDto = readCommentUseCase.findCommentsDetail(findCommentDetailCommand);
         return ResponseEntity.ok().body(commentDtoMapper.dtoToDetailResponse(commentDetailResponseDto));
+    }
+
+    /**
+     * Get Target's Comment count inbound adapter
+     *
+     * @param category request count comment's category
+     * @param targetId request count comment's target id
+     * @return About target's comment count
+     */
+    @GetMapping(GlobalUrl.COMMENT_COUNT + GlobalUrl.PATH_VARIABLE_CATEGORY_WITH_BRACE + GlobalUrl.PATH_VARIABLE_TARGET_ID_WITH_BRACE)
+    public ResponseEntity<CommentCountResponse> getCommentCount(@PathVariable(GlobalUrl.PATH_VARIABLE_CATEGORY) Integer category,
+                                                                @PathVariable(GlobalUrl.PATH_VARIABLE_TARGET_ID) Long targetId) {
+        CountCommentCommand countCommentCommand = commentDtoMapper.countRequestToCommand(category, targetId);
+        CountCommentResponseDto countCommentResponseDto = readCommentUseCase.getCommentCount(countCommentCommand);
+        return ResponseEntity.ok().body(commentDtoMapper.dtoToCountResponse(countCommentResponseDto));
     }
 }

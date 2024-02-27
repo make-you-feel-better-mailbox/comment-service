@@ -4,9 +4,9 @@ import com.onetwo.commentservice.application.port.in.command.RegisterCommentComm
 import com.onetwo.commentservice.application.port.in.command.UpdateCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.UpdateCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
-import com.onetwo.commentservice.common.exceptions.BadRequestException;
-import com.onetwo.commentservice.common.exceptions.NotFoundResourceException;
 import com.onetwo.commentservice.domain.Comment;
+import onetwo.mailboxcommonconfig.common.exceptions.BadRequestException;
+import onetwo.mailboxcommonconfig.common.exceptions.NotFoundResourceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,8 @@ class UpdateCommentUseCaseBootTest {
     private RegisterCommentPort registerCommentPort;
 
     private final Long commentId = 0L;
-    private final Long postingId = 1L;
+    private final Integer category = 1;
+    private final Long targetId = 1L;
     private final String userId = "testUserId";
     private final String content = "content";
     private final String updateContent = "updateContent";
@@ -34,7 +35,7 @@ class UpdateCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 수정 - 성공 테스트")
     void updateCommentUseCaseSuccessTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         Comment savedComment = registerCommentPort.registerComment(comment);
@@ -63,7 +64,7 @@ class UpdateCommentUseCaseBootTest {
     @DisplayName("[통합][Use Case] Comment 수정 comment already Updated - 실패 테스트")
     void updateCommentUseCaseCommentAlreadyUpdatedFailTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         comment.deleteComment();
@@ -80,7 +81,7 @@ class UpdateCommentUseCaseBootTest {
     @DisplayName("[단위][Use Case] Comment 수정 user id does not match - 실패 테스트")
     void updateCommentUseCaseUserIdDoesNotMatchFailTest() {
         //given
-        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, postingId, content);
+        RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         Comment savedComment = registerCommentPort.registerComment(comment);

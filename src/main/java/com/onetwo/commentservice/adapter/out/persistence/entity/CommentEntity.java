@@ -19,8 +19,12 @@ public class CommentEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /* 1: posing 2:comment */
     @Column(nullable = false)
-    private Long postingId;
+    private Integer category;
+
+    @Column(nullable = false)
+    private Long targetId;
 
     @Column(nullable = false)
     private String userId;
@@ -32,9 +36,10 @@ public class CommentEntity extends BaseEntity {
     @Convert(converter = BooleanNumberConverter.class)
     private Boolean state;
 
-    private CommentEntity(Long id, Long postingId, String userId, String content, Boolean state) {
+    private CommentEntity(Long id, Integer category, Long targetId, String userId, String content, Boolean state) {
         this.id = id;
-        this.postingId = postingId;
+        this.category = category;
+        this.targetId = targetId;
         this.userId = userId;
         this.content = content;
         this.state = state;
@@ -43,7 +48,8 @@ public class CommentEntity extends BaseEntity {
     public static CommentEntity domainToEntity(Comment comment) {
         CommentEntity commentEntity = new CommentEntity(
                 comment.getId(),
-                comment.getPostingId(),
+                comment.getCategory(),
+                comment.getTargetId(),
                 comment.getUserId(),
                 comment.getContent(),
                 comment.getState()
