@@ -1,5 +1,6 @@
 package com.onetwo.commentservice.application.port.in.usecase;
 
+import com.onetwo.commentservice.adapter.in.web.config.GrpcTestConfig;
 import com.onetwo.commentservice.application.port.in.command.CommentFilterCommand;
 import com.onetwo.commentservice.application.port.in.command.CountCommentCommand;
 import com.onetwo.commentservice.application.port.in.command.FindCommentDetailCommand;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import java.time.Instant;
 
 @SpringBootTest
 @Transactional
+@Import(GrpcTestConfig.class)
 class ReadCommentUseCaseBootTest {
 
     @Autowired
@@ -72,7 +75,7 @@ class ReadCommentUseCaseBootTest {
     }
 
     @Test
-    @DisplayName("[단위][Use Case] Comment 상세 조회 comment already deleted - 실패 테스트")
+    @DisplayName("[통합][Use Case] Comment 상세 조회 comment already deleted - 실패 테스트")
     void readCommentUseCaseCommentAlreadyDeletedFailTest() {
         //given
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);

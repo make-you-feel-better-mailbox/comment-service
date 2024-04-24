@@ -69,6 +69,7 @@ class CommentControllerTest {
     private final Long targetId = 1L;
     private final Long commentId = 1L;
     private final String userId = "testUserId";
+    private final String userNickname = "test";
     private final String content = "content";
     private final Instant createdDate = Instant.now();
 
@@ -147,8 +148,8 @@ class CommentControllerTest {
     void findCommentDetailSuccessTest() throws Exception {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, content, createdDate);
-        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, category, targetId, userId, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, category, targetId, userId, userNickname, content, createdDate);
 
         when(commentDtoMapper.findRequestToCommand(anyLong())).thenReturn(findCommentDetailCommand);
         when(readCommentUseCase.findCommentsDetail(any(FindCommentDetailCommand.class))).thenReturn(commentDetailResponseDto);

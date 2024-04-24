@@ -24,24 +24,26 @@ public class CommentUseCaseConverterImpl implements CommentUseCaseConverter {
     }
 
     @Override
-    public CommentDetailResponseDto commentToDetailResponseDto(Comment comment) {
+    public CommentDetailResponseDto commentToDetailResponseDto(Comment comment, String userNickname) {
         return new CommentDetailResponseDto(
                 comment.getId(),
                 comment.getCategory(),
                 comment.getTargetId(),
                 comment.getUserId(),
+                userNickname,
                 comment.getContent(),
                 comment.getCreatedAt()
         );
     }
 
     @Override
-    public FilteredCommentResponseDto commentToFilteredResponse(Comment comment) {
+    public FilteredCommentResponseDto commentToFilteredResponse(Comment comment, String userNickname) {
         return new FilteredCommentResponseDto(
                 comment.getId(),
                 comment.getCategory(),
                 comment.getTargetId(),
                 comment.getUserId(),
+                userNickname,
                 comment.getContent(),
                 comment.getCreatedAt()
         );
