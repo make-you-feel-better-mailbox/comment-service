@@ -8,6 +8,7 @@ import com.onetwo.commentservice.application.port.in.response.CommentDetailRespo
 import com.onetwo.commentservice.application.port.in.response.CountCommentResponseDto;
 import com.onetwo.commentservice.application.port.in.response.FilteredCommentResponseDto;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
+import com.onetwo.commentservice.application.port.out.ReadUserPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
 import com.onetwo.commentservice.application.service.converter.CommentUseCaseConverter;
 import com.onetwo.commentservice.application.service.service.CommentService;
@@ -44,12 +45,16 @@ class ReadCommentUseCaseTest {
     private UpdateCommentPort updateCommentPort;
 
     @Mock
+    private ReadUserPort readUserPort;
+
+    @Mock
     private CommentUseCaseConverter commentUseCaseConverter;
 
     private final long commentId = 1L;
     private final Integer category = 1;
     private final Long targetId = 1L;
     private final String userId = "testUserId";
+    private final String userNickname = "test";
     private final String content = "content";
     private final Instant createdDate = Instant.now();
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
@@ -63,13 +68,14 @@ class ReadCommentUseCaseTest {
     void readCommentUseCaseSuccessTest() {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
-        given(commentUseCaseConverter.commentToDetailResponseDto(any(Comment.class))).willReturn(commentDetailResponseDto);
+        given(commentUseCaseConverter.commentToDetailResponseDto(any(Comment.class), anyString())).willReturn(commentDetailResponseDto);
+        given(readUserPort.getUserNickname(anyString())).willReturn(userNickname);
         //when
         CommentDetailResponseDto result = readCommentUseCase.findCommentsDetail(findCommentDetailCommand);
 
@@ -112,13 +118,14 @@ class ReadCommentUseCaseTest {
         //given
         CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest);
 
-        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, category, targetId, userId, content, createdDate);
+        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.filterComment(any(CommentFilterCommand.class))).willReturn(List.of(comment));
-        given(commentUseCaseConverter.commentToFilteredResponse(any(Comment.class))).willReturn(filteredCommentResponseDto);
+        given(commentUseCaseConverter.commentToFilteredResponse(any(Comment.class), anyString())).willReturn(filteredCommentResponseDto);
+        given(readUserPort.getUserNickname(anyString())).willReturn(userNickname);
         //when
         Slice<FilteredCommentResponseDto> result = readCommentUseCase.filterComment(findCommentDetailCommand);
 

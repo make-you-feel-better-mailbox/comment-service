@@ -7,6 +7,7 @@ import com.onetwo.commentservice.application.port.in.usecase.ReadCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
 import com.onetwo.commentservice.application.port.in.usecase.UpdateCommentUseCase;
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
+import com.onetwo.commentservice.application.port.out.ReadUserPort;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
 import com.onetwo.commentservice.application.service.converter.CommentUseCaseConverter;
@@ -29,6 +30,7 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
     private final RegisterCommentPort registerCommentPort;
     private final ReadCommentPort readCommentPort;
     private final UpdateCommentPort updateCommentPort;
+    private final ReadUserPort readUserPort;
     private final CommentUseCaseConverter commentUseCaseConverter;
 
     /**
@@ -104,7 +106,9 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
     public CommentDetailResponseDto findCommentsDetail(FindCommentDetailCommand findCommentDetailCommand) {
         Comment comment = checkCommentExistAndGetComment(findCommentDetailCommand.getCommentId());
 
-        return commentUseCaseConverter.commentToDetailResponseDto(comment);
+        String userNickname = readUserPort.getUserNickname(comment.getUserId());
+
+        return commentUseCaseConverter.commentToDetailResponseDto(comment, userNickname);
     }
 
     private Comment checkCommentExistAndGetComment(Long commentId) {
@@ -136,7 +140,10 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
         if (hasNext) commentList.removeLast();
 
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = commentList.stream()
-                .map(commentUseCaseConverter::commentToFilteredResponse).toList();
+                .map(e -> {
+                    String userNickname = readUserPort.getUserNickname(e.getUserId());
+                    return commentUseCaseConverter.commentToFilteredResponse(e, userNickname);
+                }).toList();
 
         return new SliceImpl<>(filteredCommentResponseDtoList, commentFilterCommand.getPageable(), hasNext);
     }

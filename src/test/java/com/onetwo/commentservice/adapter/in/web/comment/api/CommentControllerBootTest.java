@@ -3,6 +3,7 @@ package com.onetwo.commentservice.adapter.in.web.comment.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetwo.commentservice.adapter.in.web.comment.request.RegisterCommentRequest;
 import com.onetwo.commentservice.adapter.in.web.comment.request.UpdateCommentRequest;
+import com.onetwo.commentservice.adapter.in.web.config.GrpcTestConfig;
 import com.onetwo.commentservice.adapter.in.web.config.TestHeader;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.response.RegisterCommentResponseDto;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@Import(TestHeader.class)
+@Import({TestHeader.class, GrpcTestConfig.class})
 class CommentControllerBootTest {
 
     @Autowired
@@ -201,6 +202,7 @@ class CommentControllerBootTest {
                                         fieldWithPath("category").type(JsonFieldType.NUMBER).description("comment가 달린 target category"),
                                         fieldWithPath("targetId").type(JsonFieldType.NUMBER).description("comment가 달린 target id"),
                                         fieldWithPath("userId").type(JsonFieldType.STRING).description("작성자 user id"),
+                                        fieldWithPath("userNickname").type(JsonFieldType.STRING).description("작성자 user nickname"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("comment 본문"),
                                         fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성 날짜 및 시간")
                                 )

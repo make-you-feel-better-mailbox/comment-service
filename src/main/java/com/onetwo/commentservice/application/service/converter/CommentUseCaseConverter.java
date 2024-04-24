@@ -10,9 +10,9 @@ public interface CommentUseCaseConverter {
 
     UpdateCommentResponseDto commentToUpdateResponseDto(boolean isUpdateSuccess);
 
-    CommentDetailResponseDto commentToDetailResponseDto(Comment comment);
+    CommentDetailResponseDto commentToDetailResponseDto(Comment comment, String userNickname);
 
-    FilteredCommentResponseDto commentToFilteredResponse(Comment comment);
+    FilteredCommentResponseDto commentToFilteredResponse(Comment comment, String userNickname);
 
     CountCommentResponseDto resultToCountResponseDto(int countComment);
 }

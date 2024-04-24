@@ -66,6 +66,7 @@ class CommentFilterControllerTest {
     private final String pageNumber = "pageNumber";
     private final String pageSize = "pageSize";
     private final String userId = "testUserId";
+    private final String userNickname = "test";
     private final String userIdQueryStringPath = "userId";
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
     private final Instant filterEndDate = Instant.parse("4000-01-01T00:00:00Z");
@@ -82,7 +83,7 @@ class CommentFilterControllerTest {
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = new ArrayList<>();
 
         for (int i = 1; i <= pageRequest.getPageSize(); i++) {
-            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, category, targetId, userId, content + i, Instant.now());
+            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, category, targetId, userId, userNickname, content + i, Instant.now());
             filteredCommentResponseDtoList.add(testFilteredComment);
         }
 
@@ -94,6 +95,7 @@ class CommentFilterControllerTest {
                         responseDto.category(),
                         responseDto.targetId(),
                         responseDto.userId(),
+                        responseDto.userNickname(),
                         responseDto.content(),
                         responseDto.createdDate()
                 )).toList();

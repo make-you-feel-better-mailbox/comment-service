@@ -1,4 +1,3 @@
-
 package com.onetwo.commentservice.adapter.in.web.comment.mapper;
 
 import com.onetwo.commentservice.adapter.in.web.comment.request.FilterSliceRequest;
@@ -41,6 +40,7 @@ public class CommentFilterDtoMapperImpl implements CommentFilterDtoMapper {
                         response.category(),
                         response.targetId(),
                         response.userId(),
+                        response.userNickname(),
                         response.content(),
                         response.createdDate()
                 )).toList();

@@ -1,7 +1,7 @@
 package com.onetwo.commentservice.adapter.in.web.comment.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.onetwo.commentservice.adapter.in.web.config.GrpcTestConfig;
 import com.onetwo.commentservice.adapter.in.web.config.TestHeader;
 import com.onetwo.commentservice.application.port.in.command.RegisterCommentCommand;
 import com.onetwo.commentservice.application.port.in.usecase.RegisterCommentUseCase;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@Import(TestHeader.class)
+@Import({TestHeader.class, GrpcTestConfig.class})
 class CommentFilterControllerBootTest {
 
 
@@ -120,6 +120,7 @@ class CommentFilterControllerBootTest {
                                         fieldWithPath("content[].category").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 target category (1: posting, 2: comment)"),
                                         fieldWithPath("content[].targetId").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 target id"),
                                         fieldWithPath("content[].userId").type(JsonFieldType.STRING).description("Comment 작성자 user id"),
+                                        fieldWithPath("content[].userNickname").type(JsonFieldType.STRING).description("Comment 작성자 user nickname"),
                                         fieldWithPath("content[].content").type(JsonFieldType.STRING).description("Comment 본문"),
                                         fieldWithPath("content[].createdDate").type(JsonFieldType.STRING).description("Comment 작성 일자"),
                                         fieldWithPath("pageable").type(JsonFieldType.OBJECT).description("pageable object"),

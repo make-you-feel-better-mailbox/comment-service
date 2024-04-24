@@ -6,6 +6,7 @@ public record CommentDetailResponseDto(long commentId,
                                        int category,
                                        long targetId,
                                        String userId,
+                                       String userNickname,
                                        String content,
                                        Instant createdDate) {
 }
