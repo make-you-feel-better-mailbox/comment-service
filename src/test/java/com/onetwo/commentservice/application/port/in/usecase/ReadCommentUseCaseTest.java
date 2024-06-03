@@ -10,6 +10,7 @@ import com.onetwo.commentservice.application.port.in.response.FilteredCommentRes
 import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.ReadUserPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
+import com.onetwo.commentservice.application.port.out.dto.UserInfoResponse;
 import com.onetwo.commentservice.application.service.converter.CommentUseCaseConverter;
 import com.onetwo.commentservice.application.service.service.CommentService;
 import com.onetwo.commentservice.domain.Comment;
@@ -60,6 +61,8 @@ class ReadCommentUseCaseTest {
     private final Instant filterStartDate = Instant.parse("2000-01-01T00:00:00Z");
     private final Instant filterEndDate = Instant.parse("4000-01-01T00:00:00Z");
     private final PageRequest pageRequest = PageRequest.of(0, 20);
+    private final String profileImageEndPoint = "/assets/images/avatars/avatar-2.jpg";
+    private final UserInfoResponse userInfoResponse = new UserInfoResponse(userNickname, profileImageEndPoint);
 
     private final int commentCount = 167;
 
@@ -68,14 +71,14 @@ class ReadCommentUseCaseTest {
     void readCommentUseCaseSuccessTest() {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, profileImageEndPoint, content, createdDate);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.findById(anyLong())).willReturn(Optional.of(comment));
-        given(commentUseCaseConverter.commentToDetailResponseDto(any(Comment.class), anyString())).willReturn(commentDetailResponseDto);
-        given(readUserPort.getUserNickname(anyString())).willReturn(userNickname);
+        given(commentUseCaseConverter.commentToDetailResponseDto(any(Comment.class), any(UserInfoResponse.class))).willReturn(commentDetailResponseDto);
+        given(readUserPort.getUserInfo(anyString())).willReturn(userInfoResponse);
         //when
         CommentDetailResponseDto result = readCommentUseCase.findCommentsDetail(findCommentDetailCommand);
 
@@ -118,14 +121,14 @@ class ReadCommentUseCaseTest {
         //given
         CommentFilterCommand findCommentDetailCommand = new CommentFilterCommand(category, targetId, userId, content, filterStartDate, filterEndDate, pageRequest);
 
-        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
+        FilteredCommentResponseDto filteredCommentResponseDto = new FilteredCommentResponseDto(commentId, category, targetId, userId, userNickname, profileImageEndPoint, content, createdDate);
 
         RegisterCommentCommand registerCommentCommand = new RegisterCommentCommand(userId, category, targetId, content);
         Comment comment = Comment.createNewCommentByCommand(registerCommentCommand);
 
         given(readCommentPort.filterComment(any(CommentFilterCommand.class))).willReturn(List.of(comment));
-        given(commentUseCaseConverter.commentToFilteredResponse(any(Comment.class), anyString())).willReturn(filteredCommentResponseDto);
-        given(readUserPort.getUserNickname(anyString())).willReturn(userNickname);
+        given(commentUseCaseConverter.commentToFilteredResponse(any(Comment.class), any(UserInfoResponse.class))).willReturn(filteredCommentResponseDto);
+        given(readUserPort.getUserInfo(anyString())).willReturn(userInfoResponse);
         //when
         Slice<FilteredCommentResponseDto> result = readCommentUseCase.filterComment(findCommentDetailCommand);
 

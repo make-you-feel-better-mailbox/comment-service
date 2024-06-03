@@ -121,6 +121,7 @@ class CommentFilterControllerBootTest {
                                         fieldWithPath("content[].targetId").type(JsonFieldType.NUMBER).description("Comment가 작성돼 있는 target id"),
                                         fieldWithPath("content[].userId").type(JsonFieldType.STRING).description("Comment 작성자 user id"),
                                         fieldWithPath("content[].userNickname").type(JsonFieldType.STRING).description("Comment 작성자 user nickname"),
+                                        fieldWithPath("content[].userProfileImageEndPoint").type(JsonFieldType.STRING).description("Comment 작성자 user profile image end point"),
                                         fieldWithPath("content[].content").type(JsonFieldType.STRING).description("Comment 본문"),
                                         fieldWithPath("content[].createdDate").type(JsonFieldType.STRING).description("Comment 작성 일자"),
                                         fieldWithPath("pageable").type(JsonFieldType.OBJECT).description("pageable object"),

@@ -203,6 +203,7 @@ class CommentControllerBootTest {
                                         fieldWithPath("targetId").type(JsonFieldType.NUMBER).description("comment가 달린 target id"),
                                         fieldWithPath("userId").type(JsonFieldType.STRING).description("작성자 user id"),
                                         fieldWithPath("userNickname").type(JsonFieldType.STRING).description("작성자 user nickname"),
+                                        fieldWithPath("userProfileImageEndPoint").type(JsonFieldType.STRING).description("작성자 user profile image end point"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("comment 본문"),
                                         fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성 날짜 및 시간")
                                 )

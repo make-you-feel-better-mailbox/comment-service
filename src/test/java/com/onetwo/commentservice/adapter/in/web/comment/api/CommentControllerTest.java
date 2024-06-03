@@ -72,6 +72,7 @@ class CommentControllerTest {
     private final String userNickname = "test";
     private final String content = "content";
     private final Instant createdDate = Instant.now();
+    private final String profileImageEndPoint = "/assets/images/avatars/avatar-2.jpg";
 
     @Test
     @WithMockUser(username = userId)
@@ -148,8 +149,8 @@ class CommentControllerTest {
     void findCommentDetailSuccessTest() throws Exception {
         //given
         FindCommentDetailCommand findCommentDetailCommand = new FindCommentDetailCommand(commentId);
-        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, content, createdDate);
-        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, category, targetId, userId, userNickname, content, createdDate);
+        CommentDetailResponseDto commentDetailResponseDto = new CommentDetailResponseDto(commentId, category, targetId, userId, userNickname, profileImageEndPoint, content, createdDate);
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(commentId, category, targetId, userId, userNickname, profileImageEndPoint, content, createdDate);
 
         when(commentDtoMapper.findRequestToCommand(anyLong())).thenReturn(findCommentDetailCommand);
         when(readCommentUseCase.findCommentsDetail(any(FindCommentDetailCommand.class))).thenReturn(commentDetailResponseDto);

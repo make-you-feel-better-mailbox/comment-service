@@ -52,6 +52,7 @@ public class CommentDtoMapperImpl implements CommentDtoMapper {
                 commentDetailResponseDto.targetId(),
                 commentDetailResponseDto.userId(),
                 commentDetailResponseDto.userNickname(),
+                commentDetailResponseDto.userProfileImageEndPoint(),
                 commentDetailResponseDto.content(),
                 commentDetailResponseDto.createdDate()
         );

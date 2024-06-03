@@ -73,6 +73,7 @@ class CommentFilterControllerTest {
     private final String filterStartDatePath = "filterStartDate";
     private final String filterEndDatePath = "filterEndDate";
     private final PageRequest pageRequest = PageRequest.of(0, 20);
+    private final String profileImageEndPoint = "/assets/images/avatars/avatar-2.jpg";
 
     @Test
     @DisplayName("[단위][Web Adapter] Comment Filter 조회 성공 - 성공 테스트")
@@ -83,7 +84,7 @@ class CommentFilterControllerTest {
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = new ArrayList<>();
 
         for (int i = 1; i <= pageRequest.getPageSize(); i++) {
-            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, category, targetId, userId, userNickname, content + i, Instant.now());
+            FilteredCommentResponseDto testFilteredComment = new FilteredCommentResponseDto(i, category, targetId, userId, userNickname, profileImageEndPoint, content + i, Instant.now());
             filteredCommentResponseDtoList.add(testFilteredComment);
         }
 
@@ -96,6 +97,7 @@ class CommentFilterControllerTest {
                         responseDto.targetId(),
                         responseDto.userId(),
                         responseDto.userNickname(),
+                        responseDto.userProfileImageEndPoint(),
                         responseDto.content(),
                         responseDto.createdDate()
                 )).toList();

@@ -7,6 +7,7 @@ public record FilteredCommentResponseDto(long commentId,
                                          long targetId,
                                          String userId,
                                          String userNickname,
+                                         String userProfileImageEndPoint,
                                          String content,
                                          Instant createdDate) {
 }

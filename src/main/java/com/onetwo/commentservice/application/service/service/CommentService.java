@@ -10,6 +10,7 @@ import com.onetwo.commentservice.application.port.out.ReadCommentPort;
 import com.onetwo.commentservice.application.port.out.ReadUserPort;
 import com.onetwo.commentservice.application.port.out.RegisterCommentPort;
 import com.onetwo.commentservice.application.port.out.UpdateCommentPort;
+import com.onetwo.commentservice.application.port.out.dto.UserInfoResponse;
 import com.onetwo.commentservice.application.service.converter.CommentUseCaseConverter;
 import com.onetwo.commentservice.domain.Comment;
 import lombok.RequiredArgsConstructor;
@@ -106,9 +107,9 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
     public CommentDetailResponseDto findCommentsDetail(FindCommentDetailCommand findCommentDetailCommand) {
         Comment comment = checkCommentExistAndGetComment(findCommentDetailCommand.getCommentId());
 
-        String userNickname = readUserPort.getUserNickname(comment.getUserId());
+        UserInfoResponse userInfo = readUserPort.getUserInfo(comment.getUserId());
 
-        return commentUseCaseConverter.commentToDetailResponseDto(comment, userNickname);
+        return commentUseCaseConverter.commentToDetailResponseDto(comment, userInfo);
     }
 
     private Comment checkCommentExistAndGetComment(Long commentId) {
@@ -141,8 +142,8 @@ public class CommentService implements RegisterCommentUseCase, DeleteCommentUseC
 
         List<FilteredCommentResponseDto> filteredCommentResponseDtoList = commentList.stream()
                 .map(e -> {
-                    String userNickname = readUserPort.getUserNickname(e.getUserId());
-                    return commentUseCaseConverter.commentToFilteredResponse(e, userNickname);
+                    UserInfoResponse userInfo = readUserPort.getUserInfo(e.getUserId());
+                    return commentUseCaseConverter.commentToFilteredResponse(e, userInfo);
                 }).toList();
 
         return new SliceImpl<>(filteredCommentResponseDtoList, commentFilterCommand.getPageable(), hasNext);

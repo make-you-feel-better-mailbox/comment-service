@@ -41,6 +41,7 @@ public class CommentFilterDtoMapperImpl implements CommentFilterDtoMapper {
                         response.targetId(),
                         response.userId(),
                         response.userNickname(),
+                        response.userProfileImageEndPoint(),
                         response.content(),
                         response.createdDate()
                 )).toList();
