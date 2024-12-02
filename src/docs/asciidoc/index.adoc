@@ -1,4 +1,4 @@
-= User Service API Document
+= Comment Service API Document
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
@@ -24,39 +24,173 @@ endif::[]
 |===
 //표(table)의 설정 끝.
 
-[[Notice-Service-API]]
+[[Comment-Service-API]]
 == 1. Comment
 
-=== Post Comment
+=== Register Comment
 
 http-request
 
-include::{snippets}/post-comment/http-request.adoc[]
+include::{snippets}/register-comment/http-request.adoc[]
 
 request-headers
 
-include::{snippets}/post-comment/request-headers.adoc[]
+include::{snippets}/register-comment/request-headers.adoc[]
 
 request-fields
 
-include::{snippets}/post-comment/request-fields.adoc[]
+include::{snippets}/register-comment/request-fields.adoc[]
 
 request-body
 
-include::{snippets}/post-comment/request-body.adoc[]
+include::{snippets}/register-comment/request-body.adoc[]
 
 curl-request
 
-include::{snippets}/post-comment/curl-request.adoc[]
+include::{snippets}/register-comment/curl-request.adoc[]
 
 response-fields
 
-include::{snippets}/post-comment/response-fields.adoc[]
+include::{snippets}/register-comment/response-fields.adoc[]
 
 response-body
 
-include::{snippets}/post-comment/response-body.adoc[]
+include::{snippets}/register-comment/response-body.adoc[]
 
 http-response
 
-include::{snippets}/post-comment/http-response.adoc[]
+include::{snippets}/register-comment/http-response.adoc[]
+
+=== Delete Comment
+
+path-parameters
+
+include::{snippets}/delete-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/delete-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/delete-comment/request-headers.adoc[]
+
+request-body
+
+include::{snippets}/delete-comment/request-body.adoc[]
+
+curl-request
+
+include::{snippets}/delete-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/delete-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/delete-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/delete-comment/http-response.adoc[]
+
+=== Update Comment
+
+path-parameters
+
+include::{snippets}/update-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/update-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/update-comment/request-headers.adoc[]
+
+request-fields
+
+include::{snippets}/update-comment/request-fields.adoc[]
+
+request-body
+
+include::{snippets}/update-comment/request-body.adoc[]
+
+curl-request
+
+include::{snippets}/update-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/update-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/update-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/update-comment/http-response.adoc[]
+
+=== Comment counter
+
+path-parameters
+
+include::{snippets}/count-comment/path-parameters.adoc[]
+
+http-request
+
+include::{snippets}/count-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/count-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/count-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/count-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/count-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/count-comment/http-response.adoc[]
+
+== 2. Get Filtered Comment
+
+=== Filtering Comment
+
+query-parameters
+
+include::{snippets}/filtering-comment/query-parameters.adoc[]
+
+http-request
+
+include::{snippets}/filtering-comment/http-request.adoc[]
+
+request-headers
+
+include::{snippets}/filtering-comment/request-headers.adoc[]
+
+curl-request
+
+include::{snippets}/filtering-comment/curl-request.adoc[]
+
+response-fields
+
+include::{snippets}/filtering-comment/response-fields.adoc[]
+
+response-body
+
+include::{snippets}/filtering-comment/response-body.adoc[]
+
+http-response
+
+include::{snippets}/filtering-comment/http-response.adoc[]

@@ -1,7 +1,12 @@
-server:
-  port: 0
-
 spring:
+  profiles:
+    active: local
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888"
+  cloud:
+    config:
+      name: comment-service
+      profile: local
   application:
     name: comment-service
   h2:
@@ -20,11 +25,15 @@ spring:
 eureka:
   instance:
     instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
+
+server:
+  port: 0
 
 logging:
   level:
@@ -39,3 +48,33 @@ jwt:
 
 access-id: server-access-id
 access-key: server-access-key
+
+mailbox-auto-config:
+  option: "on"
+  access-key-check: "ture"
+  logging: "on"
+  security: "on"
+
+grpc:
+  client:
+    user:
+      address: 'static://127.0.0.1:9090'
+      negotiation-type: plaintext
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: configserver:http://127.0.0.1:8888
+  cloud:
+    config:
+      name: comment-service
+      profile: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
